@@ -22,6 +22,9 @@ public class ExhibitEntity {
     @JoinColumn(name="exhibit_id")
     private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>(); // 참여 학생 리스트
 
+    private String title; // 제목
+    private String subtitle; // 부제
+    private String thumbnailUrl; // 썸네일 URL
     private String text; // 텍스트
     private String imageUrl; // 이미지 URL
     private String videoUrl; // 영상 URL

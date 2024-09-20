@@ -33,6 +33,7 @@ public class InitDB {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
             ExhibitArtistEntity exhibitArtistEntityEntityKZ = new ExhibitArtistEntity();
+
             exhibitArtistEntityEntityKZ.setName("Designer A");
             exhibitArtistEntities.add(exhibitArtistEntityEntityKZ);
 
@@ -45,6 +46,10 @@ public class InitDB {
             exhibitEntity.setImageUrl("전시 이미지 - 1");
             exhibitEntity.setVideoUrl("전시 영상 - 1");
 
+            exhibitEntity.setTitle("여름 전시 제목");
+            exhibitEntity.setSubtitle("여름 전시 부제");
+            exhibitEntity.setThumbnailUrl("대표 이미지");
+
             em.persist(exhibitEntity);
         }
 
@@ -52,12 +57,10 @@ public class InitDB {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
 
-            // 첫 번째 아티스트
             ExhibitArtistEntity exhibitArtistEntityEntityJS = new ExhibitArtistEntity();
             exhibitArtistEntityEntityJS.setName("Designer C");
             exhibitArtistEntities.add(exhibitArtistEntityEntityJS);
 
-            // 두 번째 아티스트
             ExhibitArtistEntity exhibitArtistEntityEntityYY = new ExhibitArtistEntity();
             exhibitArtistEntityEntityYY.setName("Designer D");
             exhibitArtistEntities.add(exhibitArtistEntityEntityYY);
@@ -66,6 +69,10 @@ public class InitDB {
             exhibitEntity.setText("홍익대학교 산업디자인학과 2024 여름 전시 - 2");
             exhibitEntity.setImageUrl("전시 이미지 - 2");
             exhibitEntity.setVideoUrl("전시 영상 - 2");
+
+            exhibitEntity.setTitle("여름 전시 제목");
+            exhibitEntity.setSubtitle("여름 전시 부제");
+            exhibitEntity.setThumbnailUrl("대표 이미지");
 
             em.persist(exhibitEntity);
         }
