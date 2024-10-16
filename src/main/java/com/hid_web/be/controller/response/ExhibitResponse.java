@@ -13,6 +13,7 @@ public class ExhibitResponse {
 
     private Long exhibitId; // 전시 번호
     private List<ExhibitArtistResponse> exhibitArtistList; // 참여 학생 리스트
+    private String thumbnailUrl; // 참여 학생 리스트
     private String text; // 텍스트
     private String imageUrl; // 이미지 URL
     private String videoUrl; // 영상 URL
@@ -24,6 +25,7 @@ public class ExhibitResponse {
                 .exhibitArtistList(exhibitEntity.getExhibitArtistEntityList().stream()
                         .map(ea -> ExhibitArtistResponse.of(ea))
                         .toList()) // 참여 학생 목록 변환
+                .thumbnailUrl(exhibitEntity.getThumbnailUrl())
                 .text(exhibitEntity.getText())
                 .imageUrl(exhibitEntity.getImageUrl())
                 .videoUrl(exhibitEntity.getVideoUrl())
