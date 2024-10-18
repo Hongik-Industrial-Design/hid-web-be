@@ -12,11 +12,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitArtistEntity {
+public class ExhibitDetailImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String detailImageUrl;
+
+    private int position;
 }
+
+

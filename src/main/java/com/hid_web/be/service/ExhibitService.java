@@ -1,51 +1,51 @@
 package com.hid_web.be.service;
 
-import com.hid_web.be.domain.exhibit.ExhibitArtistEntity;
+import com.hid_web.be.controller.response.ExhibitResponse;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
-import com.hid_web.be.repository.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ExhibitService {
-    private final ExhibitRepository exhibitRepository;
+
+    private final S3Writer s3Writer;
+    private final ExhibitWriter exhibitWriter;
+    private final ExhibitReader exhibitReader;
 
     public List<ExhibitEntity> findAllExhibit() {
-        return exhibitRepository.findAll();
+        return exhibitReader.findAllExhibit();
     }
 
     public ExhibitEntity findExhibitByExhibitId(Long exhibitId) {
-        return exhibitRepository.findExhibitByExhibitId(exhibitId);
+        return exhibitReader.findExhibitById(exhibitId);
     }
 
-    public ExhibitEntity createExhibit(String thumbnailUrl) {
-        ExhibitEntity exhibitEntity = new ExhibitEntity();
-        List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
+    public ExhibitEntity createExhibit(MultipartFile mainThumbnailImageFile,
+                                         List<MultipartFile> additionalThumbnailImageFiles,
+                                         List<MultipartFile> detailImageFiles) throws IOException {
 
-        ExhibitArtistEntity exhibitArtistEntityKZ = new ExhibitArtistEntity();
+        String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, "main-thumbnail");
+        List<String> additionalThumbnailImageUrls = s3Writer.writeFiles(additionalThumbnailImageFiles, "additional-thumbnails");
+        List<String> detailImageUrls = s3Writer.writeFiles(detailImageFiles, "detail-images");
 
-        exhibitArtistEntityKZ.setName("테스트 디자이너 A");
-        exhibitArtistEntities.add(exhibitArtistEntityKZ);
+        List<String> artistNames = List.of("테스트 디자이너 A", "테스트 디자이너 B");
 
-        ExhibitArtistEntity exhibitArtistEntityBM = new ExhibitArtistEntity();
-        exhibitArtistEntityBM.setName("테스트 디자이너 B");
-        exhibitArtistEntities.add(exhibitArtistEntityBM);
+        ExhibitEntity exhibitEntity = exhibitWriter.createExhibit(
+                mainThumbnailImageUrl,
+                "테스트 제목", "테스트 부제",
+                "테스트 설명", "테스트 이미지",
+                "테스트 영상", additionalThumbnailImageUrls,
+                detailImageUrls, artistNames
+        );
 
-        exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
-
-        exhibitEntity.setTitle("테스트 제목");
-        exhibitEntity.setSubtitle("테스트 부제");
-        exhibitEntity.setThumbnailUrl(thumbnailUrl);
-        exhibitEntity.setText("테스트 설명");
-        exhibitEntity.setImageUrl("테스트 이미지");
-        exhibitEntity.setVideoUrl("테스트 영상");
-
-        return exhibitRepository.save(exhibitEntity);
+        return exhibitEntity;
     }
 }
+
+
