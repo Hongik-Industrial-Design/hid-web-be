@@ -14,7 +14,20 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+  cloud:
+    aws:
+      credentials:
+        access-key: # Credentials 주의
+
+        secret-key: # Credentials 주의
+      s3:
+        bucket: # Credentials 주의
+      region:
+        static: # Credentials 주의
+
 logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+
