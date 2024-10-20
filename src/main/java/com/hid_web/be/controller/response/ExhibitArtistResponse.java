@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitArtistResponse {
-    private String name; // 학생 이름
+    private String name;
 
     public static ExhibitArtistResponse of(ExhibitArtistEntity exhibitArtistEntity) {
         return ExhibitArtistResponse.builder()

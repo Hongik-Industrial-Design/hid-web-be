@@ -8,17 +8,17 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitPreviewResponse {
-    private Long exhibitId; // 전시 번호
-    private String title; // 제목
-    private String subtitle; // 부제
-    private String thumbnailUrl; // 썸네일 URL
+    private Long exhibitId;
+    private String title;
+    private String subtitle;
+    private String thumbnailUrl;
 
     public static ExhibitPreviewResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitPreviewResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
                 .title(exhibitEntity.getTitle())
                 .subtitle(exhibitEntity.getSubtitle())
-                .thumbnailUrl(exhibitEntity.getThumbnailUrl())
+                .thumbnailUrl(exhibitEntity.getMainThumbnailImageUrl())
                 .build();
     }
 }

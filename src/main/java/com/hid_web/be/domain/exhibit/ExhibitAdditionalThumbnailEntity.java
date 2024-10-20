@@ -12,11 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitArtistEntity {
+public class ExhibitAdditionalThumbnailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String additionalThumbnailImageUrl;
+
+    private int position;
 }

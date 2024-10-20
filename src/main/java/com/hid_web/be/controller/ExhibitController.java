@@ -4,7 +4,6 @@ import com.hid_web.be.controller.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.response.ExhibitResponse;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
 import com.hid_web.be.service.ExhibitService;
-import com.hid_web.be.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 public class ExhibitController {
 
     private final ExhibitService exhibitService;
-    private final S3Service s3Service;
 
     @GetMapping("/previews")
     public ResponseEntity<List<ExhibitPreviewResponse>> findAllExhibitPreview() {
@@ -34,19 +32,20 @@ public class ExhibitController {
 
     @GetMapping("/{exhibitId}")
     public ResponseEntity<ExhibitResponse> findExhibitById(@PathVariable Long exhibitId) {
-        // ResponseEntity<ExhibitDetailResponse>
         ExhibitEntity exhibitEntity = exhibitService.findExhibitByExhibitId(exhibitId);
         return ResponseEntity.ok().body(ExhibitResponse.of(exhibitEntity));
     }
 
     @PostMapping
-    public ResponseEntity<ExhibitResponse> createExhibitForTestOnlyThumbnail(@RequestParam("thumbnailImageFile") MultipartFile thumbnailImageFile) {
+    public ResponseEntity<ExhibitResponse> createExhibit(
+            @RequestParam("mainThumbnailImageFile") MultipartFile mainThumbnailImageFile,
+            @RequestParam(value = "additionalThumbnailImageFiles", required = false) List<MultipartFile> additionalThumbnailImageFiles,
+            @RequestParam(value = "detailImageFiles", required = false) List<MultipartFile> detailImageFiles) {
+
         try {
-            String thumbnailUrl = s3Service.uploadThumbnail(thumbnailImageFile);
+            ExhibitEntity exhibitEntity = exhibitService.createExhibit(mainThumbnailImageFile, additionalThumbnailImageFiles, detailImageFiles);
 
-            ExhibitEntity exhibitEntity = exhibitService.createExhibit(thumbnailUrl);
-
-            return ResponseEntity.ok().body(ExhibitResponse.of(exhibitEntity));
+            return ResponseEntity.ok(ExhibitResponse.of(exhibitEntity));
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }

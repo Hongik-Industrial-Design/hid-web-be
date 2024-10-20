@@ -16,16 +16,25 @@ public class ExhibitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long exhibitId; // 전시 번호
+    private Long exhibitId;
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="exhibit_id")
-    private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>(); // 참여 학생 리스트
+    private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
 
-    private String title; // 제목
-    private String subtitle; // 부제
-    private String thumbnailUrl; // 썸네일 URL
-    private String text; // 텍스트
-    private String imageUrl; // 이미지 URL
-    private String videoUrl; // 영상 URL
+    private String mainThumbnailImageUrl;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "exhibit_id")
+    private List<ExhibitAdditionalThumbnailEntity> additionalThumbnails = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "exhibit_id")
+    private List<ExhibitDetailImageEntity> detailImages = new ArrayList<>();
+
+    private String title;
+    private String subtitle;
+    private String text;
+    private String imageUrl;
+    private String videoUrl;
 }
