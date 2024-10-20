@@ -19,4 +19,6 @@ public class ExhibitArtistEntity {
     private Long id;
 
     private String name;
+
+    private String profileImageUrl;
 }

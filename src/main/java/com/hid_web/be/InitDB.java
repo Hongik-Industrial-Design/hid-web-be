@@ -48,7 +48,7 @@ public class InitDB {
 
             exhibitEntity.setTitle("여름 전시 제목");
             exhibitEntity.setSubtitle("여름 전시 부제");
-            exhibitEntity.setThumbnailUrl("대표 이미지");
+            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
 
             em.persist(exhibitEntity);
         }
@@ -72,7 +72,7 @@ public class InitDB {
 
             exhibitEntity.setTitle("여름 전시 제목");
             exhibitEntity.setSubtitle("여름 전시 부제");
-            exhibitEntity.setThumbnailUrl("대표 이미지");
+            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
 
             em.persist(exhibitEntity);
         }
