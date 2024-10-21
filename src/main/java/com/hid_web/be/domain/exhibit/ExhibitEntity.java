@@ -13,28 +13,42 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exhibitId;
-
-    @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name="exhibit_id")
-    private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
 
     private String mainThumbnailImageUrl;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
-    private List<ExhibitAdditionalThumbnailEntity> additionalThumbnailImages = new ArrayList<>();
+    private List<ExhibitAdditionalThumbnailEntity> exhibitAdditionalThumbnailImageEntityList= new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
-    private List<ExhibitDetailImageEntity> detailImages = new ArrayList<>();
+    private List<ExhibitDetailImageEntity> exhibitDetailImageEntityList = new ArrayList<>();
 
-    private String title;
-    private String subtitle;
-    private String text;
-    private String imageUrl;
+    @Column(length = 100)
+    private String titleKo;
+
+    @Column(length = 100)
+    private String titleEn;
+
+    @Column(length = 200)
+    private String subtitleKo;
+
+    @Column(length = 200)
+    private String subtitleEn;
+
+    @Column(length = 300)
+    private String textKo;
+
+    @Column(length = 700)
+    private String textEn;
+
     private String videoUrl;
+
+    @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="exhibit_id")
+    private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
 }
+

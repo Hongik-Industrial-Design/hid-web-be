@@ -14,7 +14,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class S3Writer {
-
     private final S3Operations s3Operations;
 
     @Value("${spring.cloud.aws.s3.bucket}")
