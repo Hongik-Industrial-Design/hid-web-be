@@ -11,10 +11,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitArtistResponse {
     private String name;
+    private String profileImageUrl;
 
     public static ExhibitArtistResponse of(ExhibitArtistEntity exhibitArtistEntity) {
         return ExhibitArtistResponse.builder()
                 .name(exhibitArtistEntity.getName())
+                .profileImageUrl(exhibitArtistEntity.getProfileImageUrl())
                 .build();
     }
 }

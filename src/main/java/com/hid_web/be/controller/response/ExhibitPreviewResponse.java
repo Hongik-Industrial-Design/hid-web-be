@@ -9,16 +9,21 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitPreviewResponse {
     private Long exhibitId;
-    private String title;
-    private String subtitle;
-    private String thumbnailUrl;
+    private String mainThumbnailUrl;
+    private String titleKo;
+    private String titleEn;
+    private String subtitleKo;
+    private String subtitleEn;
 
     public static ExhibitPreviewResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitPreviewResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
-                .title(exhibitEntity.getTitle())
-                .subtitle(exhibitEntity.getSubtitle())
-                .thumbnailUrl(exhibitEntity.getMainThumbnailImageUrl())
+                .mainThumbnailUrl(exhibitEntity.getMainThumbnailImageUrl())
+                .titleKo(exhibitEntity.getTitleKo())
+                .titleEn(exhibitEntity.getTitleEn())
+                .subtitleKo(exhibitEntity.getSubtitleKo())
+                .subtitleEn(exhibitEntity.getSubtitleEn())
                 .build();
     }
 }
+

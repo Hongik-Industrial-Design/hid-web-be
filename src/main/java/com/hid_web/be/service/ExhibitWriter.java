@@ -15,16 +15,17 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ExhibitWriter {
-
     private final ExhibitRepository exhibitRepository;
 
     public ExhibitEntity createExhibit(String mainThumbnailImageUrl,
                                        Map<Integer, String> additionalThumbnailImageMap,
                                        Map<Integer, String> detailImageMap,
-                                       String title,
-                                       String subtitle,
-                                       String text,
-                                       String imageUrl,
+                                       String titleKo,
+                                       String titleEn,
+                                       String subtitleKo,
+                                       String subtitleEn,
+                                       String textKo,
+                                       String textEn,
                                        String videoUrl,
                                        List<String> profileImageUrls,
                                        List<String> artistNames) {
@@ -50,14 +51,15 @@ public class ExhibitWriter {
             detailImages.add(detailImage);
         }
 
-        exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
-        exhibitEntity.setAdditionalThumbnailImages(additionalThumbnails);
-        exhibitEntity.setDetailImages(detailImages);
+        exhibitEntity.setExhibitAdditionalThumbnailImageEntityList(additionalThumbnails);
+        exhibitEntity.setExhibitDetailImageEntityList(detailImages);
 
-        exhibitEntity.setTitle(title);
-        exhibitEntity.setSubtitle(subtitle);
-        exhibitEntity.setText(text);
-        exhibitEntity.setImageUrl(imageUrl);
+        exhibitEntity.setTitleKo(titleKo);
+        exhibitEntity.setTitleEn(titleEn);
+        exhibitEntity.setSubtitleKo(subtitleKo);
+        exhibitEntity.setSubtitleEn(subtitleEn);
+        exhibitEntity.setTextKo(textKo);
+        exhibitEntity.setTextEn(textEn);
         exhibitEntity.setVideoUrl(videoUrl);
 
         List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
@@ -74,8 +76,6 @@ public class ExhibitWriter {
             exhibitArtistEntities.add(artistEntity);
         }
         exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
-
-
 
         return exhibitRepository.save(exhibitEntity);
     }

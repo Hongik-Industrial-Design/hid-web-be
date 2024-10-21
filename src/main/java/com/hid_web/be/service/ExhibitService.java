@@ -13,7 +13,6 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class ExhibitService {
-
     private final S3Writer s3Writer;
     private final ExhibitWriter exhibitWriter;
     private final ExhibitReader exhibitReader;
@@ -30,7 +29,7 @@ public class ExhibitService {
     public ExhibitEntity createExhibit(MultipartFile mainThumbnailImageFile,
                                        List<MultipartFile> additionalThumbnailImageFiles,
                                        List<MultipartFile> detailImageFiles,
-                                       List<MultipartFile> profileImageFiles) throws IOException {
+                                       List<MultipartFile> profileImageFiles, String titleKo, String titleEn, String subtitleKo, String subtitleEn, String textKo, String textEn, String videoUrl) throws IOException {
 
         String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, "main-thumbnail-image");
         List<String> additionalThumbnailImageUrls = s3Writer.writeFiles(additionalThumbnailImageFiles, "additional-thumbnails-images");
@@ -45,11 +44,13 @@ public class ExhibitService {
         ExhibitEntity exhibitEntity = exhibitWriter.createExhibit(
                 mainThumbnailImageUrl,
                 additionalThumbnailImageMap, detailImageMap,
-                "테스트 제목",
-                "테스트 부제",
-                "테스트 설명",
-                "테스트 이미지",
-                "테스트 영상",
+                titleKo,
+                titleEn,
+                subtitleKo,
+                subtitleEn,
+                textKo,
+                textEn,
+                videoUrl,
                 profileImageUrls, artistNames);
 
         return exhibitEntity;

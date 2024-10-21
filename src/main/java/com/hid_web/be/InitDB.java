@@ -32,7 +32,20 @@ public class InitDB {
         public void dbInit1() {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
+
+            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
+
             ExhibitArtistEntity exhibitArtistEntityEntityKZ = new ExhibitArtistEntity();
+
+            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
+
+            exhibitEntity.setTitleKo("여름 전시 제목");
+            exhibitEntity.setTitleEn("Summer Exhibit Title");
+            exhibitEntity.setSubtitleKo("여름 전시 부제");
+            exhibitEntity.setSubtitleEn("Summer Exhibit Subtitle");
+            exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 1");
+            exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 1");
+            exhibitEntity.setVideoUrl("전시 영상 - 1");
 
             exhibitArtistEntityEntityKZ.setName("Designer A");
             exhibitArtistEntities.add(exhibitArtistEntityEntityKZ);
@@ -41,21 +54,24 @@ public class InitDB {
             exhibitArtistEntityEntityBM.setName("Designer B");
             exhibitArtistEntities.add(exhibitArtistEntityEntityBM);
 
-            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
-            exhibitEntity.setText("홍익대학교 산업디자인학과 2024 여름 전시 - 1");
-            exhibitEntity.setImageUrl("전시 이미지 - 1");
-            exhibitEntity.setVideoUrl("전시 영상 - 1");
-
-            exhibitEntity.setTitle("여름 전시 제목");
-            exhibitEntity.setSubtitle("여름 전시 부제");
-            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
-
             em.persist(exhibitEntity);
         }
 
         public void dbInit2() {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
+
+            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
+
+            exhibitEntity.setTitleKo("여름 전시 제목");
+            exhibitEntity.setTitleEn("Summer Exhibit Title");
+            exhibitEntity.setSubtitleKo("여름 전시 부제");
+            exhibitEntity.setSubtitleEn("Summer Exhibit Subtitle");
+            exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 2");
+            exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 2");
+            exhibitEntity.setVideoUrl("전시 영상 - 2");
+
+            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
 
             ExhibitArtistEntity exhibitArtistEntityEntityJS = new ExhibitArtistEntity();
             exhibitArtistEntityEntityJS.setName("Designer C");
@@ -64,15 +80,6 @@ public class InitDB {
             ExhibitArtistEntity exhibitArtistEntityEntityYY = new ExhibitArtistEntity();
             exhibitArtistEntityEntityYY.setName("Designer D");
             exhibitArtistEntities.add(exhibitArtistEntityEntityYY);
-
-            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
-            exhibitEntity.setText("홍익대학교 산업디자인학과 2024 여름 전시 - 2");
-            exhibitEntity.setImageUrl("전시 이미지 - 2");
-            exhibitEntity.setVideoUrl("전시 영상 - 2");
-
-            exhibitEntity.setTitle("여름 전시 제목");
-            exhibitEntity.setSubtitle("여름 전시 부제");
-            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
 
             em.persist(exhibitEntity);
         }
