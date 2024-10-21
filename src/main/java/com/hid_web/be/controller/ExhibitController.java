@@ -38,12 +38,13 @@ public class ExhibitController {
 
     @PostMapping
     public ResponseEntity<ExhibitResponse> createExhibit(
-            @RequestParam("mainThumbnailImageFile") MultipartFile mainThumbnailImageFile,
+            @RequestParam(value = "mainThumbnailImageFile") MultipartFile mainThumbnailImageFile,
             @RequestParam(value = "additionalThumbnailImageFiles", required = false) List<MultipartFile> additionalThumbnailImageFiles,
-            @RequestParam(value = "detailImageFiles", required = false) List<MultipartFile> detailImageFiles) {
+            @RequestParam(value = "detailImageFiles") List<MultipartFile> detailImageFiles,
+            @RequestParam(value = "profileImageFiles") List<MultipartFile> profileImageFiles) {
 
         try {
-            ExhibitEntity exhibitEntity = exhibitService.createExhibit(mainThumbnailImageFile, additionalThumbnailImageFiles, detailImageFiles);
+            ExhibitEntity exhibitEntity = exhibitService.createExhibit(mainThumbnailImageFile, additionalThumbnailImageFiles, detailImageFiles, profileImageFiles);
 
             return ResponseEntity.ok(ExhibitResponse.of(exhibitEntity));
         } catch (IOException e) {

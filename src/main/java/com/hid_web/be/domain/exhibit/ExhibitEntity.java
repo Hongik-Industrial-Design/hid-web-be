@@ -26,7 +26,7 @@ public class ExhibitEntity {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
-    private List<ExhibitAdditionalThumbnailEntity> additionalThumbnails = new ArrayList<>();
+    private List<ExhibitAdditionalThumbnailEntity> additionalThumbnailImages = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
