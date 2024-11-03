@@ -1,5 +1,7 @@
 package com.hid_web.be.service;
 
+import com.hid_web.be.domain.exhibit.ExhibitArtist;
+import com.hid_web.be.domain.exhibit.ExhibitDetail;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -29,32 +32,35 @@ public class ExhibitService {
     public ExhibitEntity createExhibit(MultipartFile mainThumbnailImageFile,
                                        List<MultipartFile> additionalThumbnailImageFiles,
                                        List<MultipartFile> detailImageFiles,
-                                       List<MultipartFile> profileImageFiles, String titleKo, String titleEn, String subtitleKo, String subtitleEn, String textKo, String textEn, String videoUrl) throws IOException {
+                                       ExhibitDetail exhibitDetail,
 
-        String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, "main-thumbnail-image");
-        List<String> additionalThumbnailImageUrls = s3Writer.writeFiles(additionalThumbnailImageFiles, "additional-thumbnails-images");
-        List<String> detailImageUrls = s3Writer.writeFiles(detailImageFiles, "detail-images");
-        List<String> profileImageUrls = s3Writer.writeFiles(profileImageFiles, "profile-images");
+                                       List<ExhibitArtist> exhibitArtistList) throws IOException {
+
+        String exhibitUUID = UUID.randomUUID().toString();
+
+        String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, exhibitUUID + "/main-thumbnail-image");
+
+        List<String> additionalThumbnailImageUrls = s3Writer.writeFiles(additionalThumbnailImageFiles, exhibitUUID + "/additional-thumbnails-images");
+        List<String> detailImageUrls = s3Writer.writeFiles(detailImageFiles, exhibitUUID + "/detail-images");
 
         Map<Integer, String> additionalThumbnailImageMap = exhibitExtractor.extractUrlMapWithPosition(additionalThumbnailImageUrls);
         Map<Integer, String> detailImageMap = exhibitExtractor.extractUrlMapWithPosition(detailImageUrls);
 
-        List<String> artistNames = exhibitExtractor.extractArtistNamesFromUrls(profileImageUrls);
+        for (ExhibitArtist artist : exhibitArtistList) {
+                String profileImageUrl = s3Writer.writeFile(artist.getProfileImageFile(), exhibitUUID + "/profile-images");
+                artist.setProfileImageFileUrl(profileImageUrl);
+        }
 
         ExhibitEntity exhibitEntity = exhibitWriter.createExhibit(
+                exhibitUUID,
                 mainThumbnailImageUrl,
-                additionalThumbnailImageMap, detailImageMap,
-                titleKo,
-                titleEn,
-                subtitleKo,
-                subtitleEn,
-                textKo,
-                textEn,
-                videoUrl,
-                profileImageUrls, artistNames);
+                additionalThumbnailImageMap,
+                detailImageMap,
+                exhibitDetail,
+                exhibitArtistList
+        );
 
         return exhibitEntity;
     }
 }
-
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class InitDB {
     private final InitService initService;
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         initService.dbInit1();
         initService.dbInit2();
@@ -47,11 +47,11 @@ public class InitDB {
             exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 1");
             exhibitEntity.setVideoUrl("전시 영상 - 1");
 
-            exhibitArtistEntityEntityKZ.setName("Designer A");
+            exhibitArtistEntityEntityKZ.setArtistNameEn("Designer A");
             exhibitArtistEntities.add(exhibitArtistEntityEntityKZ);
 
             ExhibitArtistEntity exhibitArtistEntityEntityBM = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityBM.setName("Designer B");
+            exhibitArtistEntityEntityBM.setArtistNameEn("Designer B");
             exhibitArtistEntities.add(exhibitArtistEntityEntityBM);
 
             em.persist(exhibitEntity);
@@ -74,11 +74,11 @@ public class InitDB {
             exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
 
             ExhibitArtistEntity exhibitArtistEntityEntityJS = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityJS.setName("Designer C");
+            exhibitArtistEntityEntityJS.setArtistNameEn("Designer C");
             exhibitArtistEntities.add(exhibitArtistEntityEntityJS);
 
             ExhibitArtistEntity exhibitArtistEntityEntityYY = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityYY.setName("Designer D");
+            exhibitArtistEntityEntityYY.setArtistNameEn("Designer D");
             exhibitArtistEntities.add(exhibitArtistEntityEntityYY);
 
             em.persist(exhibitEntity);

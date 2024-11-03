@@ -4,7 +4,6 @@ import com.hid_web.be.domain.exhibit.ExhibitEntity;
 import com.hid_web.be.repository.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
