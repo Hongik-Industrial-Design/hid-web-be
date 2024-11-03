@@ -10,7 +10,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ExhibitReader {
-
     private final ExhibitRepository exhibitRepository;
 
     public List<ExhibitEntity> findAllExhibit() {
