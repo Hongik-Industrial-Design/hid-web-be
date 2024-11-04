@@ -1,5 +1,6 @@
 package com.hid_web.be.controller;
 
+import com.hid_web.be.controller.request.CreateExhibitRequest;
 import com.hid_web.be.controller.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.response.ExhibitResponse;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,14 +33,33 @@ public class ExhibitController {
 
     @GetMapping("/{exhibitId}")
     public ResponseEntity<ExhibitResponse> findExhibitById(@PathVariable Long exhibitId) {
+
         ExhibitEntity exhibitEntity = exhibitService.findExhibitByExhibitId(exhibitId);
 
         return ResponseEntity.ok().body(ExhibitResponse.of(exhibitEntity));
     }
 
+
+    @PostMapping
+    public ResponseEntity<ExhibitResponse> createExhibit(@ModelAttribute CreateExhibitRequest createExhibitRequest) {
+        try {
+            ExhibitEntity exhibitEntity = exhibitService.createExhibit(
+                    createExhibitRequest.getMainThumbnailImageFile(),
+                    createExhibitRequest.getAdditionalThumbnailImageFiles(),
+                    createExhibitRequest.getDetailImageFiles(),
+                    createExhibitRequest.toExhibitDetail(),
+                    createExhibitRequest.toExhibitArtistList()
+            );
+
+            return ResponseEntity.ok(ExhibitResponse.of(exhibitEntity));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
     @Data
     @AllArgsConstructor
-    public class Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     <T> {
+    public class Result<T> {
         private T data;
     }
 }

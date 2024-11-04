@@ -1,13 +1,9 @@
 package com.hid_web.be.service;
 
-import com.hid_web.be.domain.exhibit.ExhibitAdditionalThumbnailEntity;
-import com.hid_web.be.domain.exhibit.ExhibitArtistEntity;
-import com.hid_web.be.domain.exhibit.ExhibitDetailImageEntity;
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
+import com.hid_web.be.domain.exhibit.*;
 import com.hid_web.be.repository.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,22 +13,15 @@ import java.util.Map;
 public class ExhibitWriter {
     private final ExhibitRepository exhibitRepository;
 
-    public ExhibitEntity createExhibit(String mainThumbnailImageUrl,
+    public ExhibitEntity createExhibit(String exhibitUUID,
+                                       String mainThumbnailImageUrl,
                                        Map<Integer, String> additionalThumbnailImageMap,
                                        Map<Integer, String> detailImageMap,
-                                       String titleKo,
-                                       String titleEn,
-                                       String subtitleKo,
-                                       String subtitleEn,
-                                       String textKo,
-                                       String textEn,
-                                       String videoUrl,
-                                       List<String> profileImageUrls,
-                                       List<String> artistNames) {
+                                       ExhibitDetail exhibitDetail,
+                                       List<ExhibitArtist> exhibitArtistList) {
 
         ExhibitEntity exhibitEntity = new ExhibitEntity();
-
-
+        exhibitEntity.setExhibitUUID(exhibitUUID);
         exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
 
         List<ExhibitAdditionalThumbnailEntity> additionalThumbnails = new ArrayList<>();
@@ -54,31 +43,33 @@ public class ExhibitWriter {
         exhibitEntity.setExhibitAdditionalThumbnailImageEntityList(additionalThumbnails);
         exhibitEntity.setExhibitDetailImageEntityList(detailImages);
 
-        exhibitEntity.setTitleKo(titleKo);
-        exhibitEntity.setTitleEn(titleEn);
-        exhibitEntity.setSubtitleKo(subtitleKo);
-        exhibitEntity.setSubtitleEn(subtitleEn);
-        exhibitEntity.setTextKo(textKo);
-        exhibitEntity.setTextEn(textEn);
-        exhibitEntity.setVideoUrl(videoUrl);
+        exhibitEntity.setTitleKo(exhibitDetail.getTitleKo());
+        exhibitEntity.setTitleEn(exhibitDetail.getTitleEn());
+        exhibitEntity.setSubtitleKo(exhibitDetail.getSubtitleKo());
+        exhibitEntity.setSubtitleEn(exhibitDetail.getSubtitleEn());
+        exhibitEntity.setTextKo(exhibitDetail.getTextKo());
+        exhibitEntity.setTextEn(exhibitDetail.getTextEn());
+        exhibitEntity.setVideoUrl(exhibitDetail.getVideoUrl());
 
-        List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
-
-        for (int i = 0; i < artistNames.size(); i++) {
+        List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
+        for (ExhibitArtist artist : exhibitArtistList) {
             ExhibitArtistEntity artistEntity = new ExhibitArtistEntity();
+            artistEntity.setArtistNameKo(artist.getArtistNameKo());
+            artistEntity.setArtistNameEn(artist.getArtistNameEn());
+            artistEntity.setRole(artist.getRole());
+            artistEntity.setEmail(artist.getEmail());
+            artistEntity.setInstagramUrl(artist.getInstagramUrl());
+            artistEntity.setBehanceUrl(artist.getBehanceUrl());
+            artistEntity.setLinkedinUrl(artist.getLinkedinUrl());
+            artistEntity.setProfileImageUrl(artist.getProfileImageFileUrl());
 
-            artistEntity.setName(artistNames.get(i));
-
-            if (i < profileImageUrls.size()) {
-                artistEntity.setProfileImageUrl(profileImageUrls.get(i));
-            }
-
-            exhibitArtistEntities.add(artistEntity);
+            exhibitArtistEntityList.add(artistEntity);
         }
-        exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
+        exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntityList);
 
         return exhibitRepository.save(exhibitEntity);
     }
 }
+
 
 
