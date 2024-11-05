@@ -1,0 +1,76 @@
+# 공통 설정
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  cloud:
+    aws:
+      s3:
+        bucket: ${S3_BUCKET}
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+---
+# Dev 환경 설정 - 환경변수 설정
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/hid # 도커 실행 시 host.docker.internal
+    username: hid
+    password: hid0326
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION}
+
+---
+# Prd 환경 설정 - AWS Parameter Store로 부터 환경변수 설정
+config:
+  type: aws-parameterstore:/config/hid-prd/
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+    import: ${config.type}
+
+  datasource:
+    url: jdbc:mysql://${DB_URL}:${DB_PORT}/hid
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  cloud:
+    aws:
+      credentials:
+        instance-profile: true
