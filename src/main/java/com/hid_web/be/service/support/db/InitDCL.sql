@@ -13,6 +13,9 @@ GRANT ALL PRIVILEGES ON hid.* TO 'hid'@'%';
 -- 권한 변경 사항을 즉시 적용
 FLUSH PRIVILEGES;
 
+-- hid 데이터베이스 서버에 연결
+USE hid;
+
 -- 모든 데이터베이스 목록을 표시
 SHOW DATABASES;
 
