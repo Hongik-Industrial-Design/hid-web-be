@@ -62,5 +62,12 @@ public class ExhibitService {
 
         return exhibitEntity;
     }
+
+    public void deleteExhibit(Long exhibitId) {
+        ExhibitEntity exhibitEntity = exhibitReader.findExhibitById(exhibitId);
+
+        s3Writer.deleteFolder(exhibitEntity.getExhibitUUID());
+        exhibitWriter.deleteExhibit(exhibitId);
+    }
 }
 

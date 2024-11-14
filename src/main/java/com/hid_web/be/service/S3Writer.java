@@ -1,6 +1,7 @@
 package com.hid_web.be.service;
 
 import io.awspring.cloud.s3.S3Operations;
+import io.awspring.cloud.s3.S3Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,13 @@ public class S3Writer {
 
     public String generateFileUrl(String objectKey) {
         return "https://" + bucketName + ".s3.amazonaws.com/" + objectKey;
+    }
+
+    public void deleteFolder(String folderPath) {
+        List<S3Resource> objects = s3Operations.listObjects(bucketName, folderPath);
+
+        for (S3Resource object : objects) {
+            s3Operations.deleteObject(bucketName, object.getLocation().getObject());
+        }
     }
 }

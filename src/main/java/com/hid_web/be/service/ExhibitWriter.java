@@ -69,6 +69,11 @@ public class ExhibitWriter {
 
         return exhibitRepository.save(exhibitEntity);
     }
+
+    public void deleteExhibit(Long exhibitId) {
+        exhibitRepository.deleteById(exhibitId);
+    }
+
 }
 
 

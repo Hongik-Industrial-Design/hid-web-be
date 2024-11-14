@@ -57,6 +57,12 @@ public class ExhibitController {
         }
     }
 
+    @DeleteMapping("/{exhibitId}")
+    public ResponseEntity<Void> deleteExhibit(@PathVariable Long exhibitId) {
+        exhibitService.deleteExhibit(exhibitId);
+        return ResponseEntity.noContent().build();
+    }
+
     @Data
     @AllArgsConstructor
     public class Result<T> {
