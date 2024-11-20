@@ -1,4 +1,4 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.controller.request;
 
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -7,9 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitArtist {
-    private MultipartFile profileImageFile;
-    private String profileImageFileUrl;
+public class UpdateExhibitArtistRequest {
     private String artistNameKo;
     private String artistNameEn;
     private String role;
@@ -17,5 +15,6 @@ public class ExhibitArtist {
     private String instagramUrl;
     private String behanceUrl;
     private String linkedinUrl;
+    private MultipartFile profileImageFile;
 }
 

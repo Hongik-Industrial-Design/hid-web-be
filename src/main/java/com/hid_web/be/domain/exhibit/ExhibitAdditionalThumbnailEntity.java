@@ -1,9 +1,6 @@
 package com.hid_web.be.domain.exhibit;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,3 +17,4 @@ public class ExhibitAdditionalThumbnailEntity {
     private String additionalThumbnailImageUrl;
     private int position;
 }
+

@@ -1,6 +1,7 @@
 package com.hid_web.be.controller;
 
 import com.hid_web.be.controller.request.CreateExhibitRequest;
+import com.hid_web.be.controller.request.UpdateExhibitRequest;
 import com.hid_web.be.controller.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.response.ExhibitResponse;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
@@ -61,6 +62,23 @@ public class ExhibitController {
     public ResponseEntity<Void> deleteExhibit(@PathVariable Long exhibitId) {
         exhibitService.deleteExhibit(exhibitId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{exhibitId}")
+    public ResponseEntity<ExhibitResponse> updateExhibit(@PathVariable Long exhibitId, @ModelAttribute UpdateExhibitRequest updateExhibitRequest) {
+        System.out.println(updateExhibitRequest);
+
+        try {
+            ExhibitEntity updatedExhibit = exhibitService.updateExhibit(
+                    exhibitId,
+                    updateExhibitRequest.getMainThumbnailImageFile(),
+                    updateExhibitRequest.toAdditionalThumbnailImages(),
+                    updateExhibitRequest.toExhibitDetail());
+
+            return ResponseEntity.ok(ExhibitResponse.of(updatedExhibit));
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
     @Data

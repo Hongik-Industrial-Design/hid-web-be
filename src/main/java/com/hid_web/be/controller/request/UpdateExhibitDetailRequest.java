@@ -1,4 +1,4 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.controller.request;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitDetail {
+public class UpdateExhibitDetailRequest {
     private String titleKo;
     private String titleEn;
     private String subtitleKo;
