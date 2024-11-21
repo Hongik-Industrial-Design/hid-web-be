@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,7 @@ public class ExhibitWriter {
         List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
         for (ExhibitArtist artist : exhibitArtistList) {
             ExhibitArtistEntity artistEntity = new ExhibitArtistEntity();
+            artistEntity.setArtistUUID(UUID.randomUUID().toString());
             artistEntity.setArtistNameKo(artist.getArtistNameKo());
             artistEntity.setArtistNameEn(artist.getArtistNameEn());
             artistEntity.setRole(artist.getRole());

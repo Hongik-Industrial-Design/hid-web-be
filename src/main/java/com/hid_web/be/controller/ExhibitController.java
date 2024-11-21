@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,7 +75,9 @@ public class ExhibitController {
                     updateExhibitRequest.getMainThumbnailImageFile(),
                     updateExhibitRequest.toAdditionalThumbnailImages(),
                     updateExhibitRequest.toDetailImages(),
-                    updateExhibitRequest.toExhibitDetail());
+                    updateExhibitRequest.toExhibitDetail(),
+                    updateExhibitRequest.toExhibitArtistList());
+
 
             return ResponseEntity.ok(ExhibitResponse.of(updatedExhibit));
         } catch (IOException e) {

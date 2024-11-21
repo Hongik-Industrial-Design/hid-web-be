@@ -1,5 +1,6 @@
 package com.hid_web.be.controller.request;
 
+import com.hid_web.be.domain.exhibit.ExhibitImageType;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateExhibitArtistRequest {
+    private ExhibitImageType type;
+    private String artistUUID;
+    private MultipartFile profileImageFile;
+    private String profileImageFileUrl;
     private String artistNameKo;
     private String artistNameEn;
     private String role;
@@ -15,6 +20,5 @@ public class UpdateExhibitArtistRequest {
     private String instagramUrl;
     private String behanceUrl;
     private String linkedinUrl;
-    private MultipartFile profileImageFile;
 }
 

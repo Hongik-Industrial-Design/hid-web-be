@@ -64,7 +64,8 @@ public class ExhibitService {
                                        MultipartFile mainThumbnailImageFile,
                                        List<ExhibitAdditionalThumbnailImage> additionalThumbnailImages,
                                        List<ExhibitDetailImage> detailImages,
-                                       ExhibitDetail exhibitDetail) throws IOException {
+                                       ExhibitDetail exhibitDetail,
+                                       List<ExhibitArtist> exhibitArtists) throws IOException {
         ExhibitEntity exhibitEntity = exhibitReader.findExhibitById(exhibitId);
 
         // 메인 이미지 Update
@@ -73,7 +74,7 @@ public class ExhibitService {
             exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
         }
 
-        // 부가 이미지 Update
+        // 부가 이미지 Update - Url로 엔티티 식별
         if (additionalThumbnailImages != null) {
             // 기존 이미지 Entity 리스트를 키가 Url인 HashMap으로 변환
             Map<String, ExhibitAdditionalThumbnailEntity> additionalImageMapByUrl = exhibitExtractor.extractAdditionalImageMapByUrl(exhibitEntity);
@@ -90,16 +91,16 @@ public class ExhibitService {
                         e -> e // 값: 해당 엔티티 자체
                 ));*/
 
-            // 요청 내 유효한 이미지가 하나도 없을 경우 기존 이미지 전체 삭제
-            if (additionalThumbnailImages.isEmpty()) {
-                // S3 삭제 처리
+            // 수정 후 유효한 이미지가 하나도 없을 경우 기존 이미지 전체 삭제
+            /*if (additionalThumbnailImages.isEmpty()) {
+                // S3에서 삭제 처리
                 for (String url : currentUrls) {
                     s3Writer.deleteObject(url); // S3에서 삭제
                 }
 
-                // DB 삭제 처리
+                // DB에서 삭제 처리
                 exhibitEntity.getExhibitAdditionalThumbnailImageEntityList().clear();
-            }
+            }*/
 
             for (ExhibitAdditionalThumbnailImage additionalThumbnailImage : additionalThumbnailImages) {
                 switch (additionalThumbnailImage.getType()) {
@@ -135,13 +136,13 @@ public class ExhibitService {
                 s3Writer.deleteObject(url); // S3에서 삭제
             }
 
-            // 기존 이미지 Entity 리스트에서 삭제 대상 제거
+            // DB에서 삭제 - 기존 이미지 Entity 리스트에서 삭제 대상 제거하여 JPA의 더티 체킹으로 처리
             exhibitEntity.getExhibitAdditionalThumbnailImageEntityList().removeIf(
                     e -> deletedUrls.contains(e.getAdditionalThumbnailImageUrl())
             );
         }
 
-        // 전시 상세 이미지 Update - 부가 이미지 Update와 동일한 로직으로 구현
+        // 상세 이미지 Update - 부가 이미지 Update와 동일한 로직으로 구현
         if (detailImages != null) {
             // 기존 이미지 Entity 리스트를 키가 Url인 HashMap으로 변환
             Map<String, ExhibitDetailImageEntity> detailImageMapByUrl = exhibitExtractor.extractDetailImageMapByUrl(exhibitEntity);
@@ -150,16 +151,16 @@ public class ExhibitService {
             Set<String> currentUrls = detailImageMapByUrl.keySet();
             ExhibitUrlState detailImagesUrlState = new ExhibitUrlState(currentUrls);
 
-            // 요청 내 유효한 이미지가 하나도 없을 경우 기존 이미지 전체 삭제
-            if (detailImages.isEmpty()) {
-                // S3 삭제 처리
+            // 수정 후 유효한 이미지가 하나도 없을 경우 기존 이미지 전체 삭제
+            /*if (detailImages.isEmpty()) {
+                // S3에서 삭제
                 for (String url : currentUrls) {
                     s3Writer.deleteObject(url); // S3에서 삭제
                 }
 
-                // DB 삭제 처리
+                // DB에서 삭제 - 기존 이미지 Entity 리스트에서 삭제 대상 제거하여 JPA의 더티 체킹으로 처리
                 exhibitEntity.getExhibitDetailImageEntityList().clear();
-            }
+            }*/
 
             for (ExhibitDetailImage detailImage : detailImages) {
                 switch (detailImage.getType()) {
@@ -205,7 +206,6 @@ public class ExhibitService {
         if (exhibitDetail != null) {
             if (exhibitDetail.getTitleKo() != null) {
                 exhibitEntity.setTitleKo(exhibitDetail.getTitleKo());
-                System.out.println(exhibitDetail.getTextKo());
             }
             if (exhibitDetail.getTitleEn() != null) {
                 exhibitEntity.setTitleEn(exhibitDetail.getTitleEn());
@@ -225,6 +225,94 @@ public class ExhibitService {
             if (exhibitDetail.getVideoUrl() != null) {
                 exhibitEntity.setVideoUrl(exhibitDetail.getVideoUrl());
             }
+        }
+
+        // 전시 아티스트 Update - UUID로 엔티티 식별
+        if (exhibitArtists != null) {
+            // 기존 아티스트 리스트를 키가 UUID인 HashMap으로 변환
+            Map<String, ExhibitArtistEntity> artistMapByUUID = exhibitExtractor.extractArtistMapByUUID(exhibitEntity.getExhibitArtistEntityList());
+
+            Set<String> currentUUIDs = artistMapByUUID.keySet();
+            ExhibitUUIDState artistUUIDState = new ExhibitUUIDState(currentUUIDs);
+
+            // 수정 후 아티스트가 하나도 없을 경우 기존 이미지 전체 삭제
+            /*if (exhibitArtists.isEmpty()) {
+                // S3에서 삭제
+                for (String uuid : currentUUIDs) {
+                    s3Writer.deleteObject(artistMapByUUID.get(uuid).getProfileImageUrl()); // S3에서 삭제
+                }
+
+                // DB에서 삭제 - 기존 이미지 Entity 리스트에서 삭제 대상 제거하여 JPA의 더티 체킹으로 처리
+                exhibitEntity.getExhibitArtistEntityList().clear();
+            }*/
+
+            // 수정 후 아티스트 UUID 목록을 기반으로 업데이트 또는 추가 처리
+            for (ExhibitArtist artist : exhibitArtists) {
+                ExhibitArtistEntity artistEntity = artistMapByUUID.get(artist.getArtistUUID());
+
+                switch (artist.getType()) {
+                    // S3에 파일 업로드 (file 존재, url = null)
+                    case FILE:
+                        String uploadedUrl = s3Writer.writeFileV2(artist.getProfileImageFile(), exhibitEntity.getExhibitUUID() + "/profile-images");
+
+                        // 새로운 학생을 추가한 후 프로필 사진에 프로필 이미지 업로드하는 경우
+                        if (artistEntity == null) {
+                            // 새로운 아티스트 추가
+                            artistEntity = new ExhibitArtistEntity(null, UUID.randomUUID().toString(), uploadedUrl);
+                            // 새로운 Entity 생성 후 기존 이미지 Entity 리스트에 추가
+                            exhibitEntity.getExhibitArtistEntityList().add(artistEntity);
+                        }
+
+                        // 기존 학생의 프로필 사진을 다시 업로드하는 경우
+                        artistEntity.setProfileImageUrl(uploadedUrl);
+                        artistUUIDState.getUpdatedUUIDs().add(artistEntity.getArtistUUID());
+
+                        // 수정 후 UUID Set에 추가
+                        artistUUIDState.getUpdatedUUIDs().add(artistEntity.getArtistUUID());
+
+                        break;
+
+                    // 파일 업로드가 아닌 기존 이미지에 대한 처리 (file = null, url 존재)
+                    case URL:
+                        // 유효한 UUID Set에 추가
+                        artistUUIDState.getUpdatedUUIDs().add(artist.getArtistUUID());
+                }
+
+                // 텍스트 정보 수정
+                if (artist.getArtistNameKo() != null) {
+                    artistEntity.setArtistNameKo(artist.getArtistNameKo());
+                }
+                if (artist.getArtistNameEn() != null) {
+                    artistEntity.setArtistNameEn(artist.getArtistNameEn());
+                }
+                if (artist.getRole() != null) {
+                    artistEntity.setRole(artist.getRole());
+                }
+                if (artist.getEmail() != null) {
+                    artistEntity.setEmail(artist.getEmail());
+                }
+                if (artist.getInstagramUrl() != null) {
+                    artistEntity.setInstagramUrl(artist.getInstagramUrl());
+                }
+                if (artist.getBehanceUrl() != null) {
+                    artistEntity.setBehanceUrl(artist.getBehanceUrl());
+                }
+                if (artist.getLinkedinUrl() != null) {
+                    artistEntity.setLinkedinUrl(artist.getLinkedinUrl());
+                }
+            }
+
+            Set<String> deletedUUIDs = artistUUIDState.extractDeletedUUIDs();
+
+            // S3에서 삭제
+            for (String uuid : deletedUUIDs) {
+                s3Writer.deleteObject(artistMapByUUID.get(uuid).getProfileImageUrl()); // S3에서 삭제
+            }
+
+            // DB에서 삭제 - 기존 이미지 Entity 리스트에서 삭제 대상 제거하여 JPA의 더티 체킹으로 처리
+            exhibitEntity.getExhibitArtistEntityList().removeIf(
+                    artist -> deletedUUIDs.contains(artist.getArtistUUID())
+            );
         }
 
         return exhibitEntity;

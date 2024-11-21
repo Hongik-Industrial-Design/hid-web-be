@@ -1,6 +1,7 @@
 package com.hid_web.be.service;
 
 import com.hid_web.be.domain.exhibit.ExhibitAdditionalThumbnailEntity;
+import com.hid_web.be.domain.exhibit.ExhibitArtistEntity;
 import com.hid_web.be.domain.exhibit.ExhibitDetailImageEntity;
 import com.hid_web.be.domain.exhibit.ExhibitEntity;
 import org.springframework.stereotype.Service;
@@ -77,6 +78,14 @@ public class ExhibitExtractor {
                 ));
 
         return entityMap;
+    }
+
+    public Map<String, ExhibitArtistEntity> extractArtistMapByUUID(List<ExhibitArtistEntity> artistEntityList) {
+        return artistEntityList.stream()
+                .collect(Collectors.toMap(
+                        e -> e.getArtistUUID(), // 키: UUID
+                        artist -> artist // 값: 해당 엔티티 자체
+                ));
     }
 }
 

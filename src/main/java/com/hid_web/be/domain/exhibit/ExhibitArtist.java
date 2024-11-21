@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitArtist {
+    private ExhibitImageType type;
+    private String artistUUID;
     private MultipartFile profileImageFile;
     private String profileImageFileUrl;
     private String artistNameKo;

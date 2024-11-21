@@ -1,9 +1,6 @@
 package com.hid_web.be.controller.request;
 
-import com.hid_web.be.domain.exhibit.ExhibitArtist;
-import com.hid_web.be.domain.exhibit.ExhibitDetail;
-import com.hid_web.be.domain.exhibit.ExhibitAdditionalThumbnailImage;
-import com.hid_web.be.domain.exhibit.ExhibitDetailImage;
+import com.hid_web.be.domain.exhibit.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -73,8 +70,10 @@ public class UpdateExhibitRequest {
 
         return updateExhibitArtistRequests.stream()
                 .map(updateExhibitArtistRequest -> new ExhibitArtist(
+                        updateExhibitArtistRequest.getType(),
+                        updateExhibitArtistRequest.getArtistUUID(),
                         updateExhibitArtistRequest.getProfileImageFile(),
-                        null,
+                        updateExhibitArtistRequest.getProfileImageFileUrl(),
                         updateExhibitArtistRequest.getArtistNameKo(),
                         updateExhibitArtistRequest.getArtistNameEn(),
                         updateExhibitArtistRequest.getRole(),
