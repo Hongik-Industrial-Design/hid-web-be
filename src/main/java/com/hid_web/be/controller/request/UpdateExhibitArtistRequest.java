@@ -1,5 +1,6 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.controller.request;
 
+import com.hid_web.be.domain.exhibit.ExhibitImageType;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -7,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitArtist {
+public class UpdateExhibitArtistRequest {
     private ExhibitImageType type;
     private String artistUUID;
     private MultipartFile profileImageFile;

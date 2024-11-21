@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitArtistResponse {
     private Long id;
+    private String artistUUID;
     private String profileImageUrl;
     private String artistNameKo;
     private String artistNameEn;
@@ -21,6 +22,7 @@ public class ExhibitArtistResponse {
     public static ExhibitArtistResponse of(ExhibitArtistEntity exhibitArtistEntity) {
         return ExhibitArtistResponse.builder()
                 .id(exhibitArtistEntity.getId())
+                .artistUUID(exhibitArtistEntity.getArtistUUID())
                 .profileImageUrl(exhibitArtistEntity.getProfileImageUrl())
                 .artistNameKo(exhibitArtistEntity.getArtistNameKo())
                 .artistNameEn(exhibitArtistEntity.getArtistNameEn())

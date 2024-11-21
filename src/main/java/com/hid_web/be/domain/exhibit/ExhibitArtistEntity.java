@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -16,6 +18,8 @@ public class ExhibitArtistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String artistUUID;
     private String profileImageUrl;
     private String artistNameKo;
     private String artistNameEn;
@@ -24,5 +28,11 @@ public class ExhibitArtistEntity {
     private String instagramUrl;
     private String behanceUrl;
     private String linkedinUrl;
+
+    public ExhibitArtistEntity(Long id, String artistUUID, String uploadedUrl) {
+        this.id = id;
+        this.artistUUID = artistUUID;;
+        this.profileImageUrl = uploadedUrl;
+    }
 }
 

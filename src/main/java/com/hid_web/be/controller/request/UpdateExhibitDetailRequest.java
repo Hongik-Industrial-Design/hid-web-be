@@ -1,15 +1,12 @@
 package com.hid_web.be.controller.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitDetailRequest {
+public class UpdateExhibitDetailRequest {
     private String titleKo;
     private String titleEn;
     private String subtitleKo;
@@ -18,4 +15,3 @@ public class ExhibitDetailRequest {
     private String textEn;
     private String videoUrl;
 }
-

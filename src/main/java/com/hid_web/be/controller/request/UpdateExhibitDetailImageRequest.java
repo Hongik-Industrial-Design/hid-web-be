@@ -11,14 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateExhibitArtistRequest {
+public class UpdateExhibitDetailImageRequest {
+    private MultipartFile file;
+    private String url;
+    private int position;
     private ExhibitImageType type;
-    private MultipartFile profileImageFile;
-    private String artistNameKo;
-    private String artistNameEn;
-    private String role;
-    private String email;
-    private String instagramUrl;
-    private String behanceUrl;
-    private String linkedinUrl;
 }
