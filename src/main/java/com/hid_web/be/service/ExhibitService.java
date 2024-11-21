@@ -63,14 +63,17 @@ public class ExhibitService {
     public ExhibitEntity updateExhibit(Long exhibitId,
                                        MultipartFile mainThumbnailImageFile,
                                        List<ExhibitAdditionalThumbnailImage> additionalThumbnailImages,
+                                       List<ExhibitDetailImage> detailImages,
                                        ExhibitDetail exhibitDetail) throws IOException {
         ExhibitEntity exhibitEntity = exhibitReader.findExhibitById(exhibitId);
 
+        // 메인 이미지 Update
         if (mainThumbnailImageFile != null) {
             String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, exhibitEntity.getExhibitUUID() + "/main-thumbnail-image" + UUID.randomUUID());
             exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
         }
 
+        // 부가 이미지 Update
         if (additionalThumbnailImages != null) {
             // 기존 이미지 Entity 리스트를 키가 Url인 HashMap으로 변환
             Map<String, ExhibitAdditionalThumbnailEntity> additionalImageMapByUrl = exhibitExtractor.extractAdditionalImageMapByUrl(exhibitEntity);
@@ -138,6 +141,67 @@ public class ExhibitService {
             );
         }
 
+        // 전시 상세 이미지 Update - 부가 이미지 Update와 동일한 로직으로 구현
+        if (detailImages != null) {
+            // 기존 이미지 Entity 리스트를 키가 Url인 HashMap으로 변환
+            Map<String, ExhibitDetailImageEntity> detailImageMapByUrl = exhibitExtractor.extractDetailImageMapByUrl(exhibitEntity);
+
+            // 기존 Url Set, 수정 후 Url Set을 가지는 UrlState 생성
+            Set<String> currentUrls = detailImageMapByUrl.keySet();
+            ExhibitUrlState detailImagesUrlState = new ExhibitUrlState(currentUrls);
+
+            // 요청 내 유효한 이미지가 하나도 없을 경우 기존 이미지 전체 삭제
+            if (detailImages.isEmpty()) {
+                // S3 삭제 처리
+                for (String url : currentUrls) {
+                    s3Writer.deleteObject(url); // S3에서 삭제
+                }
+
+                // DB 삭제 처리
+                exhibitEntity.getExhibitDetailImageEntityList().clear();
+            }
+
+            for (ExhibitDetailImage detailImage : detailImages) {
+                switch (detailImage.getType()) {
+                    // S3에 파일 업로드 (file 존재, url = null)
+                    case FILE:
+                        String uploadedUrl = s3Writer.writeFileV2(detailImage.getFile(), exhibitEntity.getExhibitUUID() + "/detail-images");
+
+                        // 수정 후 Url Set에 추가
+                        detailImagesUrlState.getUpdatedUrls().add(uploadedUrl);
+
+                        // 새로운 Entity 생성 후 기존 이미지 Entity 리스트에 추가
+                        ExhibitDetailImageEntity createdEntity = new ExhibitDetailImageEntity(null, uploadedUrl, detailImage.getPosition());
+                        exhibitEntity.getExhibitDetailImageEntityList().add(createdEntity);
+
+                        break;
+
+                    // 파일 업로드가 아닌 기존 이미지에 대한 처리 (file = null, url 존재)
+                    case URL:
+                        // 유효한 Url Set에 추가
+                        detailImagesUrlState.getUpdatedUrls().add(detailImage.getUrl());
+
+                        // 기존에 존재하는 엔티티이므로 해시 맵에서 꺼내, 포지션 업데이트
+                        ExhibitDetailImageEntity updatedEntity = detailImageMapByUrl.get(detailImage.getUrl());
+                        updatedEntity.setPosition(detailImage.getPosition());
+                }
+            }
+
+            // 기존 Url Set, 수정 후 Url Set을 비교하여 삭제할 Url Set 반환
+            Set<String> deletedUrls = detailImagesUrlState.extractDeletedUrls();
+
+            // S3에서 삭제
+            for (String url : deletedUrls) {
+                s3Writer.deleteObject(url); // S3에서 삭제
+            }
+
+            // 기존 이미지 Entity 리스트에서 삭제 대상 제거
+            exhibitEntity.getExhibitDetailImageEntityList().removeIf(
+                    e -> deletedUrls.contains(e.getDetailImageUrl())
+            );
+        }
+
+        // 전시 상세 텍스트 Update
         if (exhibitDetail != null) {
             if (exhibitDetail.getTitleKo() != null) {
                 exhibitEntity.setTitleKo(exhibitDetail.getTitleKo());

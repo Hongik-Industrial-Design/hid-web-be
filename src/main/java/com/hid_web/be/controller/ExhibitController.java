@@ -73,6 +73,7 @@ public class ExhibitController {
                     exhibitId,
                     updateExhibitRequest.getMainThumbnailImageFile(),
                     updateExhibitRequest.toAdditionalThumbnailImages(),
+                    updateExhibitRequest.toDetailImages(),
                     updateExhibitRequest.toExhibitDetail());
 
             return ResponseEntity.ok(ExhibitResponse.of(updatedExhibit));
