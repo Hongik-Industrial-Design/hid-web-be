@@ -20,22 +20,8 @@ public class S3Writer {
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
-    public String writeFile(MultipartFile file, String folderPath) throws IOException {
-        return uploadSingleFile(file, folderPath);
-    }
-
     public String writeFileV2(MultipartFile file, String folderPath) throws IOException {
         return uploadSingleFileV2(file, folderPath);
-    }
-
-    public List<String> writeFiles(List<MultipartFile> files, String folderPath) throws IOException {
-        List<String> urls = new ArrayList<>();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                urls.add(uploadSingleFile(file, folderPath));
-            }
-        }
-        return urls;
     }
 
     public List<String> writeFilesV2(List<MultipartFile> files, String folderPath) throws IOException {
@@ -46,17 +32,6 @@ public class S3Writer {
             }
         }
         return urls;
-    }
-
-
-    public String uploadSingleFile(MultipartFile file, String folderPath) throws IOException {
-        String objectKey = folderPath + "/" + file.getOriginalFilename();
-
-        try (InputStream inputStream = file.getInputStream()) {
-            s3Operations.upload(bucketName, objectKey, inputStream);
-        }
-
-        return generateFileUrl(objectKey);
     }
 
     public String uploadSingleFileV2(MultipartFile file, String folderPath) throws IOException {
@@ -73,7 +48,7 @@ public class S3Writer {
         return "https://" + bucketName + ".s3.amazonaws.com/" + objectKey;
     }
 
-    public void deleteFolder(String folderPath) {
+    public void deleteObjects(String folderPath) {
         List<S3Resource> objects = s3Operations.listObjects(bucketName, folderPath);
 
         for (S3Resource object : objects) {

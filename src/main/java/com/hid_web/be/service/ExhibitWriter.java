@@ -1,14 +1,14 @@
 package com.hid_web.be.service;
 
-import com.hid_web.be.domain.exhibit.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import com.hid_web.be.repository.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import com.hid_web.be.domain.exhibit.*;
 
+// Implement Layer의 Exhibit에 대해 DB Create, Update, Delete를 담당하는 구현체
 @Service
 @RequiredArgsConstructor
 public class ExhibitWriter {
@@ -16,34 +16,38 @@ public class ExhibitWriter {
 
     public ExhibitEntity createExhibit(String exhibitUUID,
                                        String mainThumbnailImageUrl,
-                                       Map<Integer, String> additionalThumbnailImageMap,
-                                       Map<Integer, String> detailImageMap,
+                                       List<ExhibitAdditionalThumbnailImage> additionalThumbnailImages,
+                                       List<ExhibitDetailImage> detailImages,
                                        ExhibitDetail exhibitDetail,
                                        List<ExhibitArtist> exhibitArtistList) {
-
+        // 전시 엔티티 생성
         ExhibitEntity exhibitEntity = new ExhibitEntity();
+        // 전시 고유 UUID 저장
         exhibitEntity.setExhibitUUID(exhibitUUID);
+        // 메인 이미지 Urls 엔티티에 저장
         exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
 
-        List<ExhibitAdditionalThumbnailEntity> additionalThumbnails = new ArrayList<>();
-        for (Map.Entry<Integer, String> entry : additionalThumbnailImageMap.entrySet()) {
-            ExhibitAdditionalThumbnailEntity additionalThumbnail = new ExhibitAdditionalThumbnailEntity();
-            additionalThumbnail.setPosition(entry.getKey());
-            additionalThumbnail.setAdditionalThumbnailImageUrl(entry.getValue());
-            additionalThumbnails.add(additionalThumbnail);
+        // 부가 이미지 Urls 엔티티에 저장
+        List<ExhibitAdditionalThumbnailEntity> additionalImageEntities = new ArrayList<>();
+        for (ExhibitAdditionalThumbnailImage additionalThumbnailImage : additionalThumbnailImages) {
+            ExhibitAdditionalThumbnailEntity additionalImageEntity = new ExhibitAdditionalThumbnailEntity();
+            additionalImageEntity.setPosition(additionalThumbnailImage.getPosition());
+            additionalImageEntity.setAdditionalThumbnailImageUrl(additionalThumbnailImage.getUrl());
+            additionalImageEntities.add(additionalImageEntity);
         }
+        exhibitEntity.setExhibitAdditionalThumbnailImageEntityList(additionalImageEntities);
 
-        List<ExhibitDetailImageEntity> detailImages = new ArrayList<>();
-        for (Map.Entry<Integer, String> entry : detailImageMap.entrySet()) {
-            ExhibitDetailImageEntity detailImage = new ExhibitDetailImageEntity();
-            detailImage.setPosition(entry.getKey());
-            detailImage.setDetailImageUrl(entry.getValue());
-            detailImages.add(detailImage);
+        // 상세 이미지 Urls 엔티티에 저장
+        List<ExhibitDetailImageEntity> detailImageEntities = new ArrayList<>();
+        for (ExhibitDetailImage detailImage : detailImages) {
+            ExhibitDetailImageEntity detailImageEntity = new ExhibitDetailImageEntity();
+            detailImageEntity.setPosition(detailImage.getPosition());
+            detailImageEntity.setDetailImageUrl(detailImage.getUrl());
+            detailImageEntities.add(detailImageEntity);
         }
+        exhibitEntity.setExhibitDetailImageEntityList(detailImageEntities);
 
-        exhibitEntity.setExhibitAdditionalThumbnailImageEntityList(additionalThumbnails);
-        exhibitEntity.setExhibitDetailImageEntityList(detailImages);
-
+        // 상세 Texts 엔티티에 저장
         exhibitEntity.setTitleKo(exhibitDetail.getTitleKo());
         exhibitEntity.setTitleEn(exhibitDetail.getTitleEn());
         exhibitEntity.setSubtitleKo(exhibitDetail.getSubtitleKo());
@@ -52,6 +56,7 @@ public class ExhibitWriter {
         exhibitEntity.setTextEn(exhibitDetail.getTextEn());
         exhibitEntity.setVideoUrl(exhibitDetail.getVideoUrl());
 
+        // 전시 Artists 엔티티에 저장
         List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
         for (ExhibitArtist artist : exhibitArtistList) {
             ExhibitArtistEntity artistEntity = new ExhibitArtistEntity();
@@ -69,6 +74,7 @@ public class ExhibitWriter {
         }
         exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntityList);
 
+        // Spring Data JPA를 이용하여 DB에 저장
         return exhibitRepository.save(exhibitEntity);
     }
 

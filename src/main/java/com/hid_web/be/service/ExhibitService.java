@@ -1,13 +1,13 @@
 package com.hid_web.be.service;
 
-import com.hid_web.be.domain.exhibit.*;
+import java.io.IOException;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
-import java.util.*;
+import com.hid_web.be.domain.exhibit.*;
 
 @Service
 @Slf4j
@@ -27,31 +27,43 @@ public class ExhibitService {
     }
 
     public ExhibitEntity createExhibit(MultipartFile mainThumbnailImageFile,
-                                       List<MultipartFile> additionalThumbnailImageFiles,
-                                       List<MultipartFile> detailImageFiles,
+                                       List<ExhibitAdditionalThumbnailImage> additionalThumbnailImages,
+                                       List<ExhibitDetailImage> detailImages,
                                        ExhibitDetail exhibitDetail,
                                        List<ExhibitArtist> exhibitArtistList) throws IOException {
-
+        // 전시 고유 UUID
         String exhibitUUID = UUID.randomUUID().toString();
 
-        String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, exhibitUUID + "/main-thumbnail-image");
+        // 메인 이미지 S3 저장
+        String mainThumbnailImageUrl = s3Writer.writeFileV2(mainThumbnailImageFile, exhibitUUID + "/main-thumbnail-image");
 
-        List<String> additionalThumbnailImageUrls = s3Writer.writeFiles(additionalThumbnailImageFiles, exhibitUUID + "/additional-thumbnails-images");
-        List<String> detailImageUrls = s3Writer.writeFiles(detailImageFiles, exhibitUUID + "/detail-images");
+        // 부가 이미지 S3 저장
+        // 필수가 아니므로 널 확인
+        if (additionalThumbnailImages != null) {
+            for (ExhibitAdditionalThumbnailImage additionalThumbnailImage : additionalThumbnailImages) {
+                String additionalThumbnailImageUrl = s3Writer.writeFileV2(additionalThumbnailImage.getFile(), exhibitUUID + "/additional-thumbnails-images");
+                additionalThumbnailImage.setUrl(additionalThumbnailImageUrl);
+            }
+        }
 
-        Map<Integer, String> additionalThumbnailImageMap = exhibitExtractor.extractUrlMapWithPosition(additionalThumbnailImageUrls);
-        Map<Integer, String> detailImageMap = exhibitExtractor.extractUrlMapWithPosition(detailImageUrls);
+        // 상세 이미지 S3 저장
+        for (ExhibitDetailImage detailImage : detailImages) {
+            String detailImageUrl = s3Writer.writeFileV2(detailImage.getFile(), exhibitUUID + "/additional-thumbnails-images");
+            detailImage.setUrl(detailImageUrl);
+        }
 
+        // 전시 아티스트 프로필 이미지 S3 저장
         for (ExhibitArtist artist : exhibitArtistList) {
-                String profileImageUrl = s3Writer.writeFile(artist.getProfileImageFile(), exhibitUUID + "/profile-images");
+                String profileImageUrl = s3Writer.writeFileV2(artist.getProfileImageFile(), exhibitUUID + "/profile-images");
                 artist.setProfileImageFileUrl(profileImageUrl);
         }
 
+        // ExhibitWriter로 DB 저장 처리
         ExhibitEntity exhibitEntity = exhibitWriter.createExhibit(
                 exhibitUUID,
                 mainThumbnailImageUrl,
-                additionalThumbnailImageMap,
-                detailImageMap,
+                additionalThumbnailImages,
+                detailImages,
                 exhibitDetail,
                 exhibitArtistList
         );
@@ -70,7 +82,7 @@ public class ExhibitService {
 
         // 메인 이미지 Update
         if (mainThumbnailImageFile != null) {
-            String mainThumbnailImageUrl = s3Writer.writeFile(mainThumbnailImageFile, exhibitEntity.getExhibitUUID() + "/main-thumbnail-image" + UUID.randomUUID());
+            String mainThumbnailImageUrl = s3Writer.writeFileV2(mainThumbnailImageFile, exhibitEntity.getExhibitUUID() + "/main-thumbnail-image");
             exhibitEntity.setMainThumbnailImageUrl(mainThumbnailImageUrl);
         }
 
@@ -321,7 +333,7 @@ public class ExhibitService {
     public void deleteExhibit(Long exhibitId) {
         ExhibitEntity exhibitEntity = exhibitReader.findExhibitById(exhibitId);
 
-        s3Writer.deleteFolder(exhibitEntity.getExhibitUUID());
+        s3Writer.deleteObjects(exhibitEntity.getExhibitUUID());
         exhibitWriter.deleteExhibit(exhibitId);
     }
 }

@@ -12,4 +12,10 @@ public class ExhibitAdditionalThumbnailImage {
     private String url;
     private int position;
     private ExhibitImageType type;
+
+    public ExhibitAdditionalThumbnailImage(MultipartFile file, String url, int position) {
+        this.file = file;
+        this.url = url;
+        this.position = position;
+    }
 }
