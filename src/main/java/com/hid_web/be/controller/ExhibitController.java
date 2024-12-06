@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,8 +46,8 @@ public class ExhibitController {
         try {
             ExhibitEntity exhibitEntity = exhibitService.createExhibit(
                     createExhibitRequest.getMainThumbnailImageFile(),
-                    createExhibitRequest.getAdditionalThumbnailImageFiles(),
-                    createExhibitRequest.getDetailImageFiles(),
+                    createExhibitRequest.toAdditionalThumbnailImages(),
+                    createExhibitRequest.toDetailImages(),
                     createExhibitRequest.toExhibitDetail(),
                     createExhibitRequest.toExhibitArtistList()
             );
