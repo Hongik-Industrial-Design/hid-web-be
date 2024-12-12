@@ -1,6 +1,6 @@
 package com.hid_web.be.controller.request;
 
-import com.hid_web.be.domain.exhibit.ExhibitImageType;
+import com.hid_web.be.domain.exhibit.ExhibitImgType;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,10 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateExhibitAdditionalThumbnailImageRequest {
+public class UpdateExhibitSubImgRequest {
     private MultipartFile file;
     private String url;
     private int position;
-    private ExhibitImageType type;
+    private ExhibitImgType type;
 }
 

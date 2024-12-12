@@ -7,15 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitAdditionalThumbnailImage {
+public class ExhibitSubImg {
     private MultipartFile file;
     private String url;
     private int position;
-    private ExhibitImageType type;
+    private ExhibitImgType type;
 
-    public ExhibitAdditionalThumbnailImage(MultipartFile file, String url, int position) {
+    public ExhibitSubImg(MultipartFile file, int position) {
         this.file = file;
-        this.url = url;
         this.position = position;
     }
 }

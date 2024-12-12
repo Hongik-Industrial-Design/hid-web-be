@@ -4,27 +4,40 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.web.multipart.MultipartFile;
 import lombok.*;
-import com.hid_web.be.domain.exhibit.ExhibitAdditionalThumbnailImage;
+import com.hid_web.be.domain.exhibit.ExhibitSubImg;
 import com.hid_web.be.domain.exhibit.ExhibitArtist;
 import com.hid_web.be.domain.exhibit.ExhibitDetail;
-import com.hid_web.be.domain.exhibit.ExhibitDetailImage;
+import com.hid_web.be.domain.exhibit.ExhibitDetailImg;
 
 @Getter
 @Setter
 public class CreateExhibitRequest {
-    private MultipartFile mainThumbnailImageFile;
-    private List<CreateExhibitAdditionalThumbnailImageRequest> createAdditionalThumbnailImageRequests;
-    private List<CreateExhibitDetailImageRequest> createDetailImageRequests;
-    private CreateExhibitDetailRequest createExhibitDetailRequest;
-    private List<CreateExhibitArtistRequest> createExhibitArtistRequestList;
+    private MultipartFile mainImgFile;
+    private List<CreateExhibitSubImgRequest> subImgs;
+    private List<CreateExhibitDetailImgRequest> detailImgs;
+    private CreateExhibitDetailRequest details;
+    private List<CreateExhibitArtistRequest> artists;
 
-    public List<ExhibitAdditionalThumbnailImage> toAdditionalThumbnailImages() {
-        if (createAdditionalThumbnailImageRequests == null) {
+    public List<ExhibitSubImg> toSubImgs() {
+        if (subImgs == null) {
             return null;
         }
 
-        return createAdditionalThumbnailImageRequests.stream()
-                .map(request -> new ExhibitAdditionalThumbnailImage(
+        return subImgs.stream()
+                .map(request -> new ExhibitSubImg(
+                        request.getFile(),
+                        request.getPosition()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExhibitDetailImg> toDetailImgs() {
+        if (detailImgs == null) {
+            return null;
+        }
+
+        return detailImgs.stream()
+                .map(request -> new ExhibitDetailImg(
                         request.getFile(),
                         request.getUrl(),
                         request.getPosition()
@@ -32,41 +45,27 @@ public class CreateExhibitRequest {
                 .collect(Collectors.toList());
     }
 
-    public List<ExhibitDetailImage> toDetailImages() {
-        if (createDetailImageRequests == null) {
-            return null;
-        }
-
-        return createDetailImageRequests.stream()
-                .map(request -> new ExhibitDetailImage(
-                        request.getFile(),
-                        request.getUrl(),
-                        request.getPosition()
-                ))
-                .collect(Collectors.toList());
-    }
-
-    public ExhibitDetail toExhibitDetail() {
+    public ExhibitDetail toDetails() {
         return new ExhibitDetail(
-                createExhibitDetailRequest.getTitleKo(),
-                createExhibitDetailRequest.getTitleEn(),
-                createExhibitDetailRequest.getSubtitleKo(),
-                createExhibitDetailRequest.getSubtitleEn(),
-                createExhibitDetailRequest.getTextKo(),
-                createExhibitDetailRequest.getTextEn(),
-                createExhibitDetailRequest.getVideoUrl()
+                details.getTitleKo(),
+                details.getTitleEn(),
+                details.getSubTitleKo(),
+                details.getSubTitleEn(),
+                details.getTextKo(),
+                details.getTextEn(),
+                details.getVideoUrl()
         );
     }
 
-    public List<ExhibitArtist> toExhibitArtistList() {
-        return createExhibitArtistRequestList.stream()
+    public List<ExhibitArtist> toArtists() {
+        return artists.stream()
                 .map(createExhibitArtistRequest -> new ExhibitArtist(
                         null,
                         null,
-                        createExhibitArtistRequest.getProfileImageFile(),
+                        createExhibitArtistRequest.getProfileImgFile(),
                         null,
-                        createExhibitArtistRequest.getArtistNameKo(),
-                        createExhibitArtistRequest.getArtistNameEn(),
+                        createExhibitArtistRequest.getNameKo(),
+                        createExhibitArtistRequest.getNameEn(),
                         createExhibitArtistRequest.getRole(),
                         createExhibitArtistRequest.getEmail(),
                         createExhibitArtistRequest.getInstagramUrl(),

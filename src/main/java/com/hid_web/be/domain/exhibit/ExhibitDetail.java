@@ -9,8 +9,8 @@ import lombok.*;
 public class ExhibitDetail {
     private String titleKo;
     private String titleEn;
-    private String subtitleKo;
-    private String subtitleEn;
+    private String subTitleKo;
+    private String subTitleEn;
     private String textKo;
     private String textEn;
     private String videoUrl;

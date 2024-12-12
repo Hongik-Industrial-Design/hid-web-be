@@ -1,8 +1,7 @@
 package com.hid_web.be;
 
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
-import com.hid_web.be.domain.exhibit.ExhibitArtistEntity;
-import jakarta.annotation.PostConstruct;
+import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.storage.ExhibitArtistEntity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -33,25 +32,25 @@ public class InitDB {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
 
-            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
+            exhibitEntity.setMainImgUrl("대표 이미지");
 
             ExhibitArtistEntity exhibitArtistEntityEntityKZ = new ExhibitArtistEntity();
 
-            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
+            exhibitEntity.setArtistEntities(exhibitArtistEntities);
 
             exhibitEntity.setTitleKo("여름 전시 제목");
             exhibitEntity.setTitleEn("Summer Exhibit Title");
-            exhibitEntity.setSubtitleKo("여름 전시 부제");
-            exhibitEntity.setSubtitleEn("Summer Exhibit Subtitle");
+            exhibitEntity.setSubTitleKo("여름 전시 부제");
+            exhibitEntity.setSubTitleEn("Summer Exhibit Subtitle");
             exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 1");
             exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 1");
             exhibitEntity.setVideoUrl("전시 영상 - 1");
 
-            exhibitArtistEntityEntityKZ.setArtistNameEn("Designer A");
+            exhibitArtistEntityEntityKZ.setNameEn("Designer A");
             exhibitArtistEntities.add(exhibitArtistEntityEntityKZ);
 
             ExhibitArtistEntity exhibitArtistEntityEntityBM = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityBM.setArtistNameEn("Designer B");
+            exhibitArtistEntityEntityBM.setNameEn("Designer B");
             exhibitArtistEntities.add(exhibitArtistEntityEntityBM);
 
             em.persist(exhibitEntity);
@@ -61,24 +60,24 @@ public class InitDB {
             ExhibitEntity exhibitEntity = new ExhibitEntity();
             List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
 
-            exhibitEntity.setExhibitArtistEntityList(exhibitArtistEntities);
+            exhibitEntity.setArtistEntities(exhibitArtistEntities);
 
             exhibitEntity.setTitleKo("여름 전시 제목");
             exhibitEntity.setTitleEn("Summer Exhibit Title");
-            exhibitEntity.setSubtitleKo("여름 전시 부제");
-            exhibitEntity.setSubtitleEn("Summer Exhibit Subtitle");
+            exhibitEntity.setSubTitleKo("여름 전시 부제");
+            exhibitEntity.setSubTitleEn("Summer Exhibit Subtitle");
             exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 2");
             exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 2");
             exhibitEntity.setVideoUrl("전시 영상 - 2");
 
-            exhibitEntity.setMainThumbnailImageUrl("대표 이미지");
+            exhibitEntity.setMainImgUrl("대표 이미지");
 
             ExhibitArtistEntity exhibitArtistEntityEntityJS = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityJS.setArtistNameEn("Designer C");
+            exhibitArtistEntityEntityJS.setNameEn("Designer C");
             exhibitArtistEntities.add(exhibitArtistEntityEntityJS);
 
             ExhibitArtistEntity exhibitArtistEntityEntityYY = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityYY.setArtistNameEn("Designer D");
+            exhibitArtistEntityEntityYY.setNameEn("Designer D");
             exhibitArtistEntities.add(exhibitArtistEntityEntityYY);
 
             em.persist(exhibitEntity);

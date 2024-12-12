@@ -1,4 +1,4 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.storage;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ExhibitDetailImageEntity {
+public class ExhibitDetailImgEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long detailImgId;
 
-    private String detailImageUrl;
+    private String detailImgUrl;
     private int position;
 }
 

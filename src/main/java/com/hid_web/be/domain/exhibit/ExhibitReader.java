@@ -1,12 +1,12 @@
-package com.hid_web.be.service;
+package com.hid_web.be.domain.exhibit;
 
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
-import com.hid_web.be.repository.ExhibitRepository;
+import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.storage.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class ExhibitReader {
     private final ExhibitRepository exhibitRepository;
