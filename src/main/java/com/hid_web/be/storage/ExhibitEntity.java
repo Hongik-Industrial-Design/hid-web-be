@@ -1,4 +1,4 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.storage;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -16,17 +16,18 @@ public class ExhibitEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exhibitId;
 
+    @Column(name = "exhibit_uuid")
     private String exhibitUUID;
 
-    private String mainThumbnailImageUrl;
+    private String mainImgUrl;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
-    private List<ExhibitAdditionalThumbnailEntity> exhibitAdditionalThumbnailImageEntityList= new ArrayList<>();
+    private List<ExhibitSubImgEntity> subImgEntities = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
-    private List<ExhibitDetailImageEntity> exhibitDetailImageEntityList = new ArrayList<>();
+    private List<ExhibitDetailImgEntity> detailImgEntities = new ArrayList<>();
 
     @Column(length = 100)
     private String titleKo;
@@ -35,10 +36,10 @@ public class ExhibitEntity {
     private String titleEn;
 
     @Column(length = 200)
-    private String subtitleKo;
+    private String subTitleKo;
 
     @Column(length = 200)
-    private String subtitleEn;
+    private String subTitleEn;
 
     @Column(length = 300)
     private String textKo;
@@ -50,6 +51,6 @@ public class ExhibitEntity {
 
     @OneToMany(cascade=CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="exhibit_id")
-    private List<ExhibitArtistEntity> exhibitArtistEntityList = new ArrayList<>();
+    private List<ExhibitArtistEntity> artistEntities = new ArrayList<>();
 }
 

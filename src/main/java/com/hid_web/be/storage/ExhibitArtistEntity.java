@@ -1,4 +1,4 @@
-package com.hid_web.be.domain.exhibit;
+package com.hid_web.be.storage;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Entity
 @Data
 @NoArgsConstructor
@@ -17,12 +15,12 @@ import java.util.UUID;
 public class ExhibitArtistEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long artistId;
 
     private String artistUUID;
-    private String profileImageUrl;
-    private String artistNameKo;
-    private String artistNameEn;
+    private String profileImgUrl;
+    private String nameKo;
+    private String nameEn;
     private String role;
     private String email;
     private String instagramUrl;
@@ -30,9 +28,9 @@ public class ExhibitArtistEntity {
     private String linkedinUrl;
 
     public ExhibitArtistEntity(Long id, String artistUUID, String uploadedUrl) {
-        this.id = id;
+        this.artistId = id;
         this.artistUUID = artistUUID;;
-        this.profileImageUrl = uploadedUrl;
+        this.profileImgUrl = uploadedUrl;
     }
 }
 

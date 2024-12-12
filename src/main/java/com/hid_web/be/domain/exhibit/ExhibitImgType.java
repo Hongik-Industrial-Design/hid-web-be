@@ -1,5 +1,5 @@
 package com.hid_web.be.domain.exhibit;
 
-public enum ExhibitImageType {
+public enum ExhibitImgType {
     FILE, URL
 }

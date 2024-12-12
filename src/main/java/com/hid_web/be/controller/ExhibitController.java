@@ -4,8 +4,8 @@ import com.hid_web.be.controller.request.CreateExhibitRequest;
 import com.hid_web.be.controller.request.UpdateExhibitRequest;
 import com.hid_web.be.controller.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.response.ExhibitResponse;
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
-import com.hid_web.be.service.ExhibitService;
+import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.domain.exhibit.ExhibitService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -45,11 +45,11 @@ public class ExhibitController {
     public ResponseEntity<ExhibitResponse> createExhibit(@ModelAttribute CreateExhibitRequest createExhibitRequest) {
         try {
             ExhibitEntity exhibitEntity = exhibitService.createExhibit(
-                    createExhibitRequest.getMainThumbnailImageFile(),
-                    createExhibitRequest.toAdditionalThumbnailImages(),
-                    createExhibitRequest.toDetailImages(),
-                    createExhibitRequest.toExhibitDetail(),
-                    createExhibitRequest.toExhibitArtistList()
+                    createExhibitRequest.getMainImgFile(),
+                    createExhibitRequest.toSubImgs(),
+                    createExhibitRequest.toDetailImgs(),
+                    createExhibitRequest.toDetails(),
+                    createExhibitRequest.toArtists()
             );
 
             return ResponseEntity.ok(ExhibitResponse.of(exhibitEntity));
@@ -66,16 +66,14 @@ public class ExhibitController {
 
     @PutMapping("/{exhibitId}")
     public ResponseEntity<ExhibitResponse> updateExhibit(@PathVariable Long exhibitId, @ModelAttribute UpdateExhibitRequest updateExhibitRequest) {
-        System.out.println(updateExhibitRequest);
-
         try {
             ExhibitEntity updatedExhibit = exhibitService.updateExhibit(
                     exhibitId,
-                    updateExhibitRequest.getMainThumbnailImageFile(),
-                    updateExhibitRequest.toAdditionalThumbnailImages(),
-                    updateExhibitRequest.toDetailImages(),
-                    updateExhibitRequest.toExhibitDetail(),
-                    updateExhibitRequest.toExhibitArtistList());
+                    updateExhibitRequest.getMainImgFile(),
+                    updateExhibitRequest.toSubImgs(),
+                    updateExhibitRequest.toDetailImgs(),
+                    updateExhibitRequest.toDetails(),
+                    updateExhibitRequest.toArtists());
 
 
             return ResponseEntity.ok(ExhibitResponse.of(updatedExhibit));

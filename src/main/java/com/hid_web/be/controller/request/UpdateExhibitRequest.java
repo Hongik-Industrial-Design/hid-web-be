@@ -1,6 +1,9 @@
 package com.hid_web.be.controller.request;
 
-import com.hid_web.be.domain.exhibit.*;
+import com.hid_web.be.domain.exhibit.ExhibitSubImg;
+import com.hid_web.be.domain.exhibit.ExhibitArtist;
+import com.hid_web.be.domain.exhibit.ExhibitDetail;
+import com.hid_web.be.domain.exhibit.ExhibitDetailImg;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
@@ -11,19 +14,19 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateExhibitRequest {
-    private MultipartFile mainThumbnailImageFile;
-    private List<UpdateExhibitAdditionalThumbnailImageRequest> updateAdditionalThumbnailImageRequests;
-    private List<UpdateExhibitDetailImageRequest> updateDetailImageRequests;
-    private UpdateExhibitDetailRequest updateExhibitDetailRequest;
-    private List<UpdateExhibitArtistRequest> updateExhibitArtistRequests;
+    private MultipartFile mainImgFile;
+    private List<UpdateExhibitSubImgRequest> subImgs;
+    private List<UpdateExhibitDetailImgRequest> detailImgs;
+    private UpdateExhibitDetailRequest details;
+    private List<UpdateExhibitArtistRequest> artists;
 
-    public List<ExhibitAdditionalThumbnailImage> toAdditionalThumbnailImages() {
-        if (updateAdditionalThumbnailImageRequests == null) {
+    public List<ExhibitSubImg> toSubImgs() {
+        if (subImgs == null) {
             return null;
         }
 
-        return updateAdditionalThumbnailImageRequests.stream()
-                .map(request -> new ExhibitAdditionalThumbnailImage(
+        return subImgs.stream()
+                .map(request -> new ExhibitSubImg(
                         request.getFile(),
                         request.getUrl(),
                         request.getPosition(),
@@ -32,13 +35,13 @@ public class UpdateExhibitRequest {
                 .collect(Collectors.toList());
     }
 
-    public List<ExhibitDetailImage> toDetailImages() {
-        if (updateDetailImageRequests == null) {
+    public List<ExhibitDetailImg> toDetailImgs() {
+        if (detailImgs == null) {
             return null;
         }
 
-        return updateDetailImageRequests.stream()
-                .map(request -> new ExhibitDetailImage(
+        return detailImgs.stream()
+                .map(request -> new ExhibitDetailImg(
                         request.getFile(),
                         request.getUrl(),
                         request.getPosition(),
@@ -47,35 +50,35 @@ public class UpdateExhibitRequest {
                 .collect(Collectors.toList());
     }
 
-    public ExhibitDetail toExhibitDetail() {
-        if (updateExhibitDetailRequest == null) {
+    public ExhibitDetail toDetails() {
+        if (details == null) {
             return null;
         }
 
         return new ExhibitDetail(
-                updateExhibitDetailRequest.getTitleKo(),
-                updateExhibitDetailRequest.getTitleEn(),
-                updateExhibitDetailRequest.getSubtitleKo(),
-                updateExhibitDetailRequest.getSubtitleEn(),
-                updateExhibitDetailRequest.getTextKo(),
-                updateExhibitDetailRequest.getTextEn(),
-                updateExhibitDetailRequest.getVideoUrl()
+                details.getTitleKo(),
+                details.getTitleEn(),
+                details.getSubTitleKo(),
+                details.getSubTitleEn(),
+                details.getTextKo(),
+                details.getTextEn(),
+                details.getVideoUrl()
         );
     }
 
-    public List<ExhibitArtist> toExhibitArtistList() {
-        if (updateExhibitArtistRequests == null) {
+    public List<ExhibitArtist> toArtists() {
+        if (artists == null) {
             return null;
         }
 
-        return updateExhibitArtistRequests.stream()
+        return artists.stream()
                 .map(updateExhibitArtistRequest -> new ExhibitArtist(
                         updateExhibitArtistRequest.getType(),
                         updateExhibitArtistRequest.getArtistUUID(),
-                        updateExhibitArtistRequest.getProfileImageFile(),
-                        updateExhibitArtistRequest.getProfileImageFileUrl(),
-                        updateExhibitArtistRequest.getArtistNameKo(),
-                        updateExhibitArtistRequest.getArtistNameEn(),
+                        updateExhibitArtistRequest.getProfileImgFile(),
+                        updateExhibitArtistRequest.getProfileImgUrl(),
+                        updateExhibitArtistRequest.getNameKo(),
+                        updateExhibitArtistRequest.getNameEn(),
                         updateExhibitArtistRequest.getRole(),
                         updateExhibitArtistRequest.getEmail(),
                         updateExhibitArtistRequest.getInstagramUrl(),

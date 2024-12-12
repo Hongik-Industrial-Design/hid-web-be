@@ -1,6 +1,6 @@
 package com.hid_web.be.controller.response;
 
-import com.hid_web.be.domain.exhibit.ExhibitArtistEntity;
+import com.hid_web.be.storage.ExhibitArtistEntity;
 import lombok.*;
 
 @Getter
@@ -10,9 +10,9 @@ import lombok.*;
 public class ExhibitArtistResponse {
     private Long id;
     private String artistUUID;
-    private String profileImageUrl;
-    private String artistNameKo;
-    private String artistNameEn;
+    private String profileImgUrl;
+    private String nameKo;
+    private String nameEn;
     private String role;
     private String email;
     private String instagramUrl;
@@ -21,11 +21,11 @@ public class ExhibitArtistResponse {
 
     public static ExhibitArtistResponse of(ExhibitArtistEntity exhibitArtistEntity) {
         return ExhibitArtistResponse.builder()
-                .id(exhibitArtistEntity.getId())
+                .id(exhibitArtistEntity.getArtistId())
                 .artistUUID(exhibitArtistEntity.getArtistUUID())
-                .profileImageUrl(exhibitArtistEntity.getProfileImageUrl())
-                .artistNameKo(exhibitArtistEntity.getArtistNameKo())
-                .artistNameEn(exhibitArtistEntity.getArtistNameEn())
+                .profileImgUrl(exhibitArtistEntity.getProfileImgUrl())
+                .nameKo(exhibitArtistEntity.getNameKo())
+                .nameEn(exhibitArtistEntity.getNameEn())
                 .role(exhibitArtistEntity.getRole())
                 .email(exhibitArtistEntity.getEmail())
                 .instagramUrl(exhibitArtistEntity.getInstagramUrl())

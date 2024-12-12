@@ -1,6 +1,6 @@
 package com.hid_web.be.controller.response;
 
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
+import com.hid_web.be.storage.ExhibitEntity;
 import lombok.*;
 
 import java.util.List;
@@ -11,37 +11,37 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitResponse {
     private Long exhibitId;
-    private String mainThumbnailImageUrl;
-    private List<ExhibitAdditionalThumbnailResponse> exhibitAdditionalThumbnailImageList;
-    private List<ExhibitDetailImageResponse> exhibitDetailImageEntityList;
+    private String mainImgUrl;
+    private List<ExhibitSubImgResponse> subImgs;
+    private List<ExhibitDetailImgResponse> detailImgs;
     private String titleKo;
     private String titleEn;
-    private String subtitleKo;
-    private String subtitleEn;
+    private String subTitleKo;
+    private String subTitleEn;
     private String textKo;
     private String textEn;
     private String videoUrl;
-    private List<ExhibitArtistResponse> exhibitArtistList;
+    private List<ExhibitArtistResponse> artists;
 
     // ExhibitEntity를 ExhibitResponse로 변환하는 정적 팩토리 메서드
     public static ExhibitResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
-                .mainThumbnailImageUrl(exhibitEntity.getMainThumbnailImageUrl())
-                .exhibitAdditionalThumbnailImageList(exhibitEntity.getExhibitAdditionalThumbnailImageEntityList().stream()
-                        .map(ExhibitAdditionalThumbnailResponse::of)
+                .mainImgUrl(exhibitEntity.getMainImgUrl())
+                .subImgs(exhibitEntity.getSubImgEntities().stream()
+                        .map(ExhibitSubImgResponse::of)
                         .toList())
-                .exhibitDetailImageEntityList(exhibitEntity.getExhibitDetailImageEntityList().stream()
-                        .map(ExhibitDetailImageResponse::of)
+                .detailImgs(exhibitEntity.getDetailImgEntities().stream()
+                        .map(ExhibitDetailImgResponse::of)
                         .toList())
                 .titleKo(exhibitEntity.getTitleKo())
                 .titleEn(exhibitEntity.getTitleEn())
-                .subtitleKo(exhibitEntity.getSubtitleKo())
-                .subtitleEn(exhibitEntity.getSubtitleEn())
+                .subTitleKo(exhibitEntity.getSubTitleKo())
+                .subTitleEn(exhibitEntity.getSubTitleEn())
                 .textKo(exhibitEntity.getTextKo())
                 .textEn(exhibitEntity.getTextEn())
                 .videoUrl(exhibitEntity.getVideoUrl())
-                .exhibitArtistList(exhibitEntity.getExhibitArtistEntityList().stream()
+                .artists(exhibitEntity.getArtistEntities().stream()
                         .map(ExhibitArtistResponse::of)
                         .toList())
                 .build();

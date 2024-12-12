@@ -8,12 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitArtist {
-    private ExhibitImageType type;
+    private ExhibitImgType type;
     private String artistUUID;
-    private MultipartFile profileImageFile;
-    private String profileImageFileUrl;
-    private String artistNameKo;
-    private String artistNameEn;
+    private MultipartFile profileImgFile;
+    private String profileImgUrl;
+    private String nameKo;
+    private String nameEn;
     private String role;
     private String email;
     private String instagramUrl;

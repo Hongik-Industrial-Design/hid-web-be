@@ -18,13 +18,13 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 20MB
-      max-request-size: 20MB
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 logging:
   level:
     org.hibernate.SQL: debug
-    org.hibernate.type: trace
+    org.hibernate.orm.jdbc.bind: trace
 
 ---
 # Dev 환경 설정 - 환경변수 설정

@@ -5,8 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
-public class CreateExhibitDetailImageRequest {
+public class CreateExhibitSubImgRequest {
     private MultipartFile file;
-    private String url;
     private int position;
 }

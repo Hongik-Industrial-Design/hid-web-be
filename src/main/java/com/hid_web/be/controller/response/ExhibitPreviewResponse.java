@@ -1,6 +1,6 @@
 package com.hid_web.be.controller.response;
 
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
+import com.hid_web.be.storage.ExhibitEntity;
 import lombok.*;
 
 @Getter
@@ -9,20 +9,20 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitPreviewResponse {
     private Long exhibitId;
-    private String mainThumbnailUrl;
+    private String mainImgUrl;
     private String titleKo;
     private String titleEn;
-    private String subtitleKo;
-    private String subtitleEn;
+    private String subTitleKo;
+    private String subTitleEn;
 
     public static ExhibitPreviewResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitPreviewResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
-                .mainThumbnailUrl(exhibitEntity.getMainThumbnailImageUrl())
+                .mainImgUrl(exhibitEntity.getMainImgUrl())
                 .titleKo(exhibitEntity.getTitleKo())
                 .titleEn(exhibitEntity.getTitleEn())
-                .subtitleKo(exhibitEntity.getSubtitleKo())
-                .subtitleEn(exhibitEntity.getSubtitleEn())
+                .subTitleKo(exhibitEntity.getSubTitleKo())
+                .subTitleEn(exhibitEntity.getSubTitleEn())
                 .build();
     }
 }

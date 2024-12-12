@@ -1,6 +1,5 @@
-package com.hid_web.be.repository;
+package com.hid_web.be.storage;
 
-import com.hid_web.be.domain.exhibit.ExhibitEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
