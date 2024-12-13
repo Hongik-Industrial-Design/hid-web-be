@@ -56,6 +56,10 @@ public class UpdateExhibitRequest {
         }
 
         return new ExhibitDetail(
+                details.getExhibitType(),
+                details.getYear(),
+                details.getMajor(),
+                details.getClub(),
                 details.getTitleKo(),
                 details.getTitleEn(),
                 details.getSubTitleKo(),

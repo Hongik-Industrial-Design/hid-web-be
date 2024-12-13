@@ -221,6 +221,18 @@ public class ExhibitService {
 
         // 전시 상세 텍스트 Update
         if (details != null) {
+            if (details.getExhibitType() != null) {
+                exhibitEntity.setExhibitType(details.getExhibitType());
+            }
+            if (details.getYear() != null) {
+                exhibitEntity.setYear(details.getYear());
+            }
+            if (details.getMajor() != null) {
+                exhibitEntity.setMajor(details.getMajor());
+            }
+            if (details.getClub() != null) {
+                exhibitEntity.setClub(details.getClub());
+            }
             if (details.getTitleKo() != null) {
                 exhibitEntity.setTitleKo(details.getTitleKo());
             }

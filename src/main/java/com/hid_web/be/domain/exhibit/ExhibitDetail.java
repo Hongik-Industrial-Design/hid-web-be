@@ -7,6 +7,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitDetail {
+    private ExhibitType exhibitType;
+    private Integer year;
+    private String major;
+    private String club;
     private String titleKo;
     private String titleEn;
     private String subTitleKo;
