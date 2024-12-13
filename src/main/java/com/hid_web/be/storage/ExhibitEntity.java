@@ -1,6 +1,8 @@
 package com.hid_web.be.storage;
 
+import com.hid_web.be.domain.exhibit.ExhibitType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -18,6 +20,17 @@ public class ExhibitEntity {
 
     @Column(name = "exhibit_uuid")
     private String exhibitUUID;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ExhibitType exhibitType;
+
+    @Column(nullable = false)
+    private int year;
+
+    private String major;
+
+    private String club;
 
     private String mainImgUrl;
 

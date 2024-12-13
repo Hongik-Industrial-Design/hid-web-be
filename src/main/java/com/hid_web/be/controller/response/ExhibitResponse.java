@@ -1,5 +1,6 @@
 package com.hid_web.be.controller.response;
 
+import com.hid_web.be.domain.exhibit.ExhibitType;
 import com.hid_web.be.storage.ExhibitEntity;
 import lombok.*;
 
@@ -11,6 +12,10 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitResponse {
     private Long exhibitId;
+    private ExhibitType exhibitType;
+    private Integer year;
+    private String major;
+    private String club;
     private String mainImgUrl;
     private List<ExhibitSubImgResponse> subImgs;
     private List<ExhibitDetailImgResponse> detailImgs;
@@ -27,6 +32,10 @@ public class ExhibitResponse {
     public static ExhibitResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
+                .exhibitType(exhibitEntity.getExhibitType())
+                .year(exhibitEntity.getYear())
+                .major(exhibitEntity.getMajor())
+                .club(exhibitEntity.getClub())
                 .mainImgUrl(exhibitEntity.getMainImgUrl())
                 .subImgs(exhibitEntity.getSubImgEntities().stream()
                         .map(ExhibitSubImgResponse::of)

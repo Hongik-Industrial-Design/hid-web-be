@@ -48,6 +48,10 @@ public class ExhibitWriter {
         exhibitEntity.setDetailImgEntities(detailImageEntities);
 
         // 상세 Texts 엔티티에 저장
+        exhibitEntity.setExhibitType(details.getExhibitType());
+        exhibitEntity.setYear(details.getYear());
+        exhibitEntity.setMajor(details.getMajor());
+        exhibitEntity.setClub(details.getClub());
         exhibitEntity.setTitleKo(details.getTitleKo());
         exhibitEntity.setTitleEn(details.getTitleEn());
         exhibitEntity.setSubTitleKo(details.getSubTitleKo());
