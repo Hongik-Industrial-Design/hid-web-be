@@ -1,7 +1,7 @@
 package com.hid_web.be.controller.response;
 
 import com.hid_web.be.domain.exhibit.ExhibitType;
-import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import lombok.*;
 
 import java.util.List;
