@@ -1,8 +1,7 @@
-package com.hid_web.be.storage;
+package com.hid_web.be.storage.exhibit;
 
 import com.hid_web.be.domain.exhibit.ExhibitType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;

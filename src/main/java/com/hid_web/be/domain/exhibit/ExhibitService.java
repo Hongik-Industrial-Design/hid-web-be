@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.*;
 
 import com.hid_web.be.domain.s3.S3Writer;
-import com.hid_web.be.storage.ExhibitSubImgEntity;
-import com.hid_web.be.storage.ExhibitArtistEntity;
-import com.hid_web.be.storage.ExhibitDetailImgEntity;
-import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.storage.exhibit.ExhibitSubImgEntity;
+import com.hid_web.be.storage.exhibit.ExhibitArtistEntity;
+import com.hid_web.be.storage.exhibit.ExhibitDetailImgEntity;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

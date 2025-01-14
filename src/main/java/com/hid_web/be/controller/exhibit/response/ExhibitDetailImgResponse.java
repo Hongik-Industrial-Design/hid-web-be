@@ -1,6 +1,6 @@
-package com.hid_web.be.controller.response;
+package com.hid_web.be.controller.exhibit.response;
 
-import com.hid_web.be.storage.ExhibitDetailImgEntity;
+import com.hid_web.be.storage.exhibit.ExhibitDetailImgEntity;
 import lombok.*;
 
 @Getter

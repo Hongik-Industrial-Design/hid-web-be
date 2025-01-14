@@ -1,10 +1,10 @@
-package com.hid_web.be.controller;
+package com.hid_web.be.controller.exhibit;
 
-import com.hid_web.be.controller.request.CreateExhibitRequest;
-import com.hid_web.be.controller.request.UpdateExhibitRequest;
-import com.hid_web.be.controller.response.ExhibitPreviewResponse;
-import com.hid_web.be.controller.response.ExhibitResponse;
-import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.controller.exhibit.request.CreateExhibitRequest;
+import com.hid_web.be.controller.exhibit.request.UpdateExhibitRequest;
+import com.hid_web.be.controller.exhibit.response.ExhibitPreviewResponse;
+import com.hid_web.be.controller.exhibit.response.ExhibitResponse;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import com.hid_web.be.domain.exhibit.ExhibitService;
 import lombok.AllArgsConstructor;
 import lombok.Data;

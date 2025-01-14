@@ -1,9 +1,9 @@
 package com.hid_web.be.domain.exhibit;
 
-import com.hid_web.be.storage.ExhibitSubImgEntity;
-import com.hid_web.be.storage.ExhibitArtistEntity;
-import com.hid_web.be.storage.ExhibitDetailImgEntity;
-import com.hid_web.be.storage.ExhibitEntity;
+import com.hid_web.be.storage.exhibit.ExhibitSubImgEntity;
+import com.hid_web.be.storage.exhibit.ExhibitArtistEntity;
+import com.hid_web.be.storage.exhibit.ExhibitDetailImgEntity;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
