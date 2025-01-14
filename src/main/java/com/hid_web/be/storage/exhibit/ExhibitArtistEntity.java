@@ -1,4 +1,4 @@
-package com.hid_web.be.storage;
+package com.hid_web.be.storage.exhibit;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -1,7 +1,7 @@
 package com.hid_web.be.domain.exhibit;
 
-import com.hid_web.be.storage.ExhibitEntity;
-import com.hid_web.be.storage.ExhibitRepository;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
+import com.hid_web.be.storage.exhibit.ExhibitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;

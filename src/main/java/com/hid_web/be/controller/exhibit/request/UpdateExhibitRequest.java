@@ -1,4 +1,4 @@
-package com.hid_web.be.controller.request;
+package com.hid_web.be.controller.exhibit.request;
 
 import com.hid_web.be.domain.exhibit.ExhibitSubImg;
 import com.hid_web.be.domain.exhibit.ExhibitArtist;

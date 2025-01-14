@@ -1,4 +1,4 @@
-package com.hid_web.be.controller.request;
+package com.hid_web.be.controller.exhibit.request;
 
 import java.util.List;
 import java.util.stream.Collectors;

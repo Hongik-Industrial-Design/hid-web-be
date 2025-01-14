@@ -1,4 +1,4 @@
-package com.hid_web.be.controller.request;
+package com.hid_web.be.controller.exhibit.request;
 
 import org.springframework.web.multipart.MultipartFile;
 import lombok.*;

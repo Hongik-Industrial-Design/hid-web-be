@@ -1,7 +1,7 @@
 package com.hid_web.be;
 
-import com.hid_web.be.storage.ExhibitEntity;
-import com.hid_web.be.storage.ExhibitArtistEntity;
+import com.hid_web.be.storage.exhibit.ExhibitEntity;
+import com.hid_web.be.storage.exhibit.ExhibitArtistEntity;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package com.hid_web.be.controller.response;
+package com.hid_web.be.controller.exhibit.response;
 
 import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import lombok.*;
