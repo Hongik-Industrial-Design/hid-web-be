@@ -1,0 +1,34 @@
+package com.hid_web.be.domain.community;
+
+import com.hid_web.be.controller.community.response.NoticeResponse;
+import com.hid_web.be.storage.community.NoticeEntity;
+import com.hid_web.be.storage.community.NoticeRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class NoticeService {
+
+    private final NoticeRepository noticeRepository;
+
+    public NoticeService(NoticeRepository noticeRepository) {
+        this.noticeRepository = noticeRepository;
+    }
+
+    public List<NoticeResponse> getAllNotices() {
+
+        List<NoticeEntity> noticeEntities = noticeRepository.findAll();
+
+        return noticeEntities.stream()
+                .map(notice -> new NoticeResponse(
+                        notice.getId(),
+                        notice.getTitle(),
+                        notice.getAuthor(),
+                        notice.getCreatedDate(),
+                        notice.getHasAttachment()
+                ))
+                .collect(Collectors.toList());
+    }
+}
