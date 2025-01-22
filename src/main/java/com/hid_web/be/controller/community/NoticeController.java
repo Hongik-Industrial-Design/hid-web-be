@@ -1,15 +1,18 @@
 package com.hid_web.be.controller.community;
 
+import com.hid_web.be.controller.community.response.NoticeDetailResponse;
 import com.hid_web.be.controller.community.response.NoticeResponse;
 import com.hid_web.be.domain.community.NoticeService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notice")
+@RequestMapping("/notices")
 public class NoticeController {
 
     private final NoticeService noticeService;
@@ -23,4 +26,11 @@ public class NoticeController {
         List<NoticeResponse> notices = noticeService.getAllNotices();
         return ResponseEntity.ok(notices);
     }
+
+    @GetMapping("/{noticeId}")
+    public ResponseEntity<NoticeDetailResponse> getNoticeDetail(@PathVariable Long noticeId) {
+        NoticeDetailResponse response = noticeService.getNoticeDetail(noticeId);
+        return ResponseEntity.ok(response);
+    }
+
 }

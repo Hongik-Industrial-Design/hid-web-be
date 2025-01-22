@@ -26,6 +26,16 @@ public class NoticeEntity {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
-    @Column(name = "has_attachment")
-    private Boolean hasAttachment;
+    @Column(nullable = false)
+    private int views;
+
+    @Column(name = "attachment_url", length = 500)
+    private String attachmentUrl;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
 }
