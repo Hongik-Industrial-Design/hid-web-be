@@ -38,4 +38,7 @@ public class NoticeEntity {
     @Column(columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "is_important", nullable = false)
+    private boolean isImportant;
+
 }

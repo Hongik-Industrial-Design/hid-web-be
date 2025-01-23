@@ -5,10 +5,9 @@ import com.hid_web.be.controller.community.response.NoticeResponse;
 import com.hid_web.be.storage.community.NoticeEntity;
 import com.hid_web.be.storage.community.NoticeRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NoticeService {
@@ -19,19 +18,10 @@ public class NoticeService {
         this.noticeRepository = noticeRepository;
     }
 
-    public List<NoticeResponse> getAllNotices() {
+    public Page<NoticeResponse> getAllNotices(Pageable pageable) {
+        Page<NoticeEntity> noticeEntities = noticeRepository.findAllByOrderByIsImportantDescCreatedDateDesc(pageable);
 
-        List<NoticeEntity> noticeEntities = noticeRepository.findAll();
-
-        return noticeEntities.stream()
-                .map(notice -> new NoticeResponse(
-                        notice.getId(),
-                        notice.getTitle(),
-                        notice.getAuthor(),
-                        notice.getCreatedDate(),
-                        notice.getAttachmentUrl()
-                ))
-                .collect(Collectors.toList());
+        return noticeEntities.map(NoticeResponse::new);
     }
 
     @Transactional

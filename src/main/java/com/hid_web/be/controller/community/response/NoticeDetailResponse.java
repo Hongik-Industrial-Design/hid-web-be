@@ -18,6 +18,7 @@ public class NoticeDetailResponse {
     private String attachmentUrl;
     private String imageUrl;
     private String content;
+    private boolean isImportant;
 
     public NoticeDetailResponse(NoticeEntity entity) {
         this.id = entity.getId();
@@ -28,6 +29,7 @@ public class NoticeDetailResponse {
         this.attachmentUrl = entity.getAttachmentUrl();
         this.imageUrl = entity.getImageUrl();
         this.content = entity.getContent();
+        this.isImportant = entity.isImportant();
     }
 
 }
