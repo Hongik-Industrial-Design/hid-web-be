@@ -1,11 +1,13 @@
 package com.hid_web.be.controller.community.response;
 
+import com.hid_web.be.storage.community.NoticeEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NoticeResponse {
     private Long id;
@@ -13,13 +15,15 @@ public class NoticeResponse {
     private String author;
     private LocalDateTime createdDate;
     private String attachmentUrl;
+    private boolean isImportant;
 
-    public NoticeResponse(Long id, String title, String author, LocalDateTime createdDate, String attachmentUrl) {
-        this.id = id;
-        this.title = title;
-        this.author = author;
-        this.createdDate = createdDate;
-        this.attachmentUrl = attachmentUrl;
+    public NoticeResponse(NoticeEntity entity) {
+        this.id = entity.getId();
+        this.title = entity.getTitle();
+        this.author = entity.getAuthor();
+        this.createdDate = entity.getCreatedDate();
+        this.attachmentUrl = entity.getAttachmentUrl();
+        this.isImportant = entity.isImportant();
     }
 
 }
