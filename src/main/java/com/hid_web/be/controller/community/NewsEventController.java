@@ -1,9 +1,11 @@
 package com.hid_web.be.controller.community;
 
+import com.hid_web.be.controller.community.response.NewsEventDetailResponse;
 import com.hid_web.be.controller.community.response.NewsEventResponse;
 import com.hid_web.be.domain.community.NewsEventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -19,4 +21,8 @@ public class NewsEventController {
         return newsEventService.getAllNewsEvents();
     }
 
+    @GetMapping("/{newsEventId}")
+    public NewsEventDetailResponse getNewsEventDetail(@PathVariable Long newsEventId) {
+        return newsEventService.getNewsEventDetail(newsEventId);
+    }
 }

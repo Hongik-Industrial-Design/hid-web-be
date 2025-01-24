@@ -29,7 +29,7 @@ public class InitNewsEventDB {
         private final EntityManager em;
 
         public void dbInit() {
-            for (int i = 1; i <= 20; i++) {
+            for (int i = 1; i <= 10; i++) {
                 NewsEventEntity newsEvent = new NewsEventEntity();
                 newsEvent.setThumbnailUrl("https://example.com/image" + i + ".jpg");
                 newsEvent.setCreatedDate(LocalDateTime.now().minusDays(i));
@@ -38,6 +38,9 @@ public class InitNewsEventDB {
                         i % 4 == 1 ? NewsEventCategory.CONTEST :
                                 i % 4 == 2 ? NewsEventCategory.LECTURE_SEMINAR :
                                         NewsEventCategory.AWARD);
+                newsEvent.setContent("뉴스 & 이벤트 본문 내용 " + i);
+                newsEvent.setAttachmentUrl(i % 2 == 0 ? "https://example.com/file" + i + ".pdf" : null);
+                newsEvent.setViews(0);
                 em.persist(newsEvent);
             }
         }

@@ -25,8 +25,8 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeDetailResponse getNoticeDetail(Long id) {
-        NoticeEntity notice = noticeRepository.findById(id)
+    public NoticeDetailResponse getNoticeDetail(Long noticeId) {
+        NoticeEntity notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new RuntimeException("Notice not found"));
 
         // 조회수 증가
