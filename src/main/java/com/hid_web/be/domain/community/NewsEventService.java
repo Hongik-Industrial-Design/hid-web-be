@@ -5,22 +5,18 @@ import com.hid_web.be.controller.community.response.NewsEventResponse;
 import com.hid_web.be.storage.community.NewsEventEntity;
 import com.hid_web.be.storage.community.NewsEventRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class NewsEventService {
     private final NewsEventRepository newsEventRepository;
 
-    public List<NewsEventResponse> getAllNewsEvents() {
-        List<NewsEventEntity> newsEventEntities = newsEventRepository.findAll();
-
-        return newsEventEntities.stream()
-                .map(NewsEventResponse::new)
-                .collect(Collectors.toList());
+    public Page<NewsEventResponse> getAllNewsEvents(Pageable pageable) {
+        return newsEventRepository.findAll(pageable)
+                .map(NewsEventResponse::new);
     }
 
     public NewsEventDetailResponse getNewsEventDetail(Long newsEventId) {
