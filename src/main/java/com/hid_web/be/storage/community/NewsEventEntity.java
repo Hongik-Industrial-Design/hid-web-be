@@ -30,4 +30,13 @@ public class NewsEventEntity {
     @Column(nullable = false, length = 50)
     private NewsEventCategory category;
 
+    @Column(columnDefinition = "TEXT")
+    private String content;
+
+    @Column(name = "attachment_url", length = 500)
+    private String attachmentUrl;
+
+    @Column(nullable = false)
+    private int views;
+
 }
