@@ -15,7 +15,7 @@ public class InitNoticeDB {
 
     private final InitService initService;
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         initService.dbInit();
     }
