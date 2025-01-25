@@ -6,9 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
-    @Query("SELECT n FROM NoticeEntity n ORDER BY n.isImportant DESC, n.createdDate DESC")
-    Page<NoticeEntity> findAllByOrderByIsImportantDescCreatedDateDesc(Pageable pageable);
+
+    List<NoticeEntity> findTop3ByIsImportantTrueOrderByCreatedDateDesc();
+
+    List<NoticeEntity> findByIsImportantFalseOrderByCreatedDateDesc(Pageable pageable);
 
 }

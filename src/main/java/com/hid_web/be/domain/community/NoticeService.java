@@ -6,8 +6,12 @@ import com.hid_web.be.storage.community.NoticeEntity;
 import com.hid_web.be.storage.community.NoticeRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class NoticeService {
@@ -18,10 +22,18 @@ public class NoticeService {
         this.noticeRepository = noticeRepository;
     }
 
-    public Page<NoticeResponse> getAllNotices(Pageable pageable) {
-        Page<NoticeEntity> noticeEntities = noticeRepository.findAllByOrderByIsImportantDescCreatedDateDesc(pageable);
+    public List<NoticeResponse> getAllNotices(Pageable pageable) {
+        List<NoticeEntity> importantNotices = noticeRepository.findTop3ByIsImportantTrueOrderByCreatedDateDesc();
 
-        return noticeEntities.map(NoticeResponse::new);
+        int remainingCount = pageable.getPageSize() - importantNotices.size();
+        Pageable generalPageable = PageRequest.of(pageable.getPageNumber(), remainingCount);
+        List<NoticeEntity> generalNotices = noticeRepository.findByIsImportantFalseOrderByCreatedDateDesc(generalPageable);
+
+        List<NoticeResponse> allNotices = new ArrayList<>();
+        importantNotices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
+        generalNotices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
+
+        return allNotices;
     }
 
     @Transactional

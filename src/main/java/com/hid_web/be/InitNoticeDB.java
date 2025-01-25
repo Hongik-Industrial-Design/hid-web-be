@@ -28,7 +28,7 @@ public class InitNoticeDB {
         private final EntityManager em;
 
         public void dbInit() {
-            for (int i = 1; i <= 20; i++) {
+            for (int i = 1; i <= 14; i++) {
                 NoticeEntity notice = new NoticeEntity();
                 notice.setTitle(i % 5 == 0 ? "중요 공지사항 " + i : "일반 공지사항 " + i);
                 notice.setAuthor(i % 3 == 0 ? "TA" : "Council");

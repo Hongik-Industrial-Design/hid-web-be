@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/notices")
 public class NoticeController {
@@ -24,7 +26,8 @@ public class NoticeController {
     }
 
     @GetMapping
-    public Page<NoticeResponse> getAllNotices(@PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public List<NoticeResponse> getAllNotices(
+            @PageableDefault(size = 12, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return noticeService.getAllNotices(pageable);
     }
 
