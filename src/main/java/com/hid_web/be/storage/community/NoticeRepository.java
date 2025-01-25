@@ -15,4 +15,9 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
     List<NoticeEntity> findByIsImportantFalseOrderByCreatedDateDesc(Pageable pageable);
 
+    // Community 조회
+    List<NoticeEntity> findTop1ByIsImportantTrueOrderByCreatedDateDesc();
+
+    List<NoticeEntity> findTop5ByIsImportantFalseOrderByCreatedDateDesc();
+
 }
