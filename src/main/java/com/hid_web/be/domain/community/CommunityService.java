@@ -23,7 +23,7 @@ public class CommunityService {
     public CommunityResponse getCommunityData() {
         List<NoticeEntity> importantNotices = noticeRepository.findTop1ByIsImportantTrueOrderByCreatedDateDesc();
 
-        List<NoticeEntity> generalNotices = noticeRepository.findTop5ByIsImportantFalseOrderByCreatedDateDesc();
+        List<NoticeEntity> generalNotices = noticeRepository.findTop4ByIsImportantFalseOrderByCreatedDateDesc();
 
         List<NoticeEntity> allNotices = new ArrayList<>();
         allNotices.addAll(importantNotices);

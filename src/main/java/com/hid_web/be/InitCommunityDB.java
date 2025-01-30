@@ -31,7 +31,7 @@ public class InitCommunityDB {
 
         public void dbInit() {
 
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 20; i++) {
                 NoticeEntity notice = new NoticeEntity();
                 notice.setTitle(i % 5 == 0 ? "중요 공지사항 " + i : "일반 공지사항 " + i);
                 notice.setAuthor(i % 3 == 0 ? "TA" : "Council");
@@ -42,10 +42,10 @@ public class InitCommunityDB {
                 em.persist(notice);
             }
 
-            for (int i = 1; i <= 10; i++) {
+            for (int i = 1; i <= 20; i++) {
                 NewsEventEntity newsEvent = new NewsEventEntity();
                 newsEvent.setThumbnailUrl("https://example.com/image" + i + ".jpg");
-                newsEvent.setCreatedDate(LocalDateTime.now().minusDays(i));
+                newsEvent.setCreatedDate(LocalDateTime.now().minusDays(20-i));
                 newsEvent.setTitle("뉴스이벤트 제목 " + i);
                 newsEvent.setCategory(i % 4 == 0 ? NewsEventCategory.RECRUIT :
                         i % 4 == 1 ? NewsEventCategory.CONTEST :

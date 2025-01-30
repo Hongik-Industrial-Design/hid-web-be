@@ -26,8 +26,7 @@ public class NoticeController {
     }
 
     @GetMapping
-    public List<NoticeResponse> getAllNotices(
-            @PageableDefault(size = 12, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public List<NoticeResponse> getAllNotices(Pageable pageable) {
         return noticeService.getAllNotices(pageable);
     }
 
