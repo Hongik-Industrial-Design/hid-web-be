@@ -7,6 +7,8 @@ import java.util.List;
 
 @Repository
 public interface NewsEventRepository extends JpaRepository<NewsEventEntity, Long> {
+
+    // Community 조회
     List<NewsEventEntity> findTop8ByOrderByCreatedDateDesc();
 
 }

@@ -21,7 +21,7 @@ public class NewsEventController {
 
     @GetMapping
     public Page<NewsEventResponse> getAllNewsEvents(
-            @PageableDefault(size = 10, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 12, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
         return newsEventService.getAllNewsEvents(pageable);
     }
 

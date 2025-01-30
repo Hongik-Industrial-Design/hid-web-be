@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
+    // Notice 조회
     List<NoticeEntity> findTop3ByIsImportantTrueOrderByCreatedDateDesc();
 
     List<NoticeEntity> findByIsImportantFalseOrderByCreatedDateDesc(Pageable pageable);
@@ -18,6 +19,6 @@ public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
     // Community 조회
     List<NoticeEntity> findTop1ByIsImportantTrueOrderByCreatedDateDesc();
 
-    List<NoticeEntity> findTop5ByIsImportantFalseOrderByCreatedDateDesc();
+    List<NoticeEntity> findTop4ByIsImportantFalseOrderByCreatedDateDesc();
 
 }
