@@ -53,7 +53,7 @@ spring:
 ---
 # Prd 환경 설정 - AWS Parameter Store로 부터 환경변수 설정
 config:
-  type: aws-parameterstore:/config/hid-prd/
+  type: optional:aws-parameterstore:/config/hid-prd/
 
 spring:
   config:
@@ -74,3 +74,7 @@ spring:
     aws:
       credentials:
         instance-profile: true
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_REGION}

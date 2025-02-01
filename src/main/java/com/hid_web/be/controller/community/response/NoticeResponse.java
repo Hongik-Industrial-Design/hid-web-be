@@ -3,7 +3,8 @@ package com.hid_web.be.controller.community.response;
 import com.hid_web.be.storage.community.NoticeEntity;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Builder
@@ -13,8 +14,8 @@ public class NoticeResponse {
     private Long id;
     private String title;
     private String author;
-    private LocalDateTime createdDate;
-    private String attachmentUrl;
+    private LocalDate createdDate;
+    private List<String> attachmentUrls; // 첨부파일 S3 URL 리스트
     private boolean isImportant;
 
     public NoticeResponse(NoticeEntity entity) {
@@ -22,7 +23,7 @@ public class NoticeResponse {
         this.title = entity.getTitle();
         this.author = entity.getAuthor();
         this.createdDate = entity.getCreatedDate();
-        this.attachmentUrl = entity.getAttachmentUrl();
+        this.attachmentUrls = entity.getAttachmentUrls();
         this.isImportant = entity.isImportant();
     }
 

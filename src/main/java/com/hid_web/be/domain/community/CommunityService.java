@@ -23,7 +23,7 @@ public class CommunityService {
     public CommunityResponse getCommunityData() {
         List<NoticeEntity> importantNotices = noticeRepository.findTop1ByIsImportantTrueOrderByCreatedDateDesc();
 
-        List<NoticeEntity> generalNotices = noticeRepository.findTop4ByIsImportantFalseOrderByCreatedDateDesc();
+        List<NoticeEntity> generalNotices = noticeRepository.findTop4ByIsImportantFalseOrderByCreatedDateDescIdDesc();
 
         List<NoticeEntity> allNotices = new ArrayList<>();
         allNotices.addAll(importantNotices);
@@ -33,7 +33,7 @@ public class CommunityService {
                 .map(NoticeResponse::new)
                 .collect(Collectors.toList());
 
-        List<NewsEventEntity> newsEventEntities = newsEventRepository.findTop8ByOrderByCreatedDateDesc();
+        List<NewsEventEntity> newsEventEntities = newsEventRepository.findTop8ByOrderByCreatedDateDescIdDesc();
 
         List<NewsEventResponse> newsEvents = newsEventEntities.stream()
                 .map(NewsEventResponse::new)

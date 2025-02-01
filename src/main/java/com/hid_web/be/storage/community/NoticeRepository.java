@@ -12,13 +12,13 @@ import java.util.List;
 public interface NoticeRepository extends JpaRepository<NoticeEntity, Long> {
 
     // Notice 조회
-    List<NoticeEntity> findTop3ByIsImportantTrueOrderByCreatedDateDesc();
+    List<NoticeEntity> findTop3ByIsImportantTrueOrderByCreatedDateDescIdDesc();
 
-    List<NoticeEntity> findByIsImportantFalseOrderByCreatedDateDesc(Pageable pageable);
+    List<NoticeEntity> findByIsImportantFalseOrderByCreatedDateDescIdDesc(Pageable pageable);
 
     // Community 조회
     List<NoticeEntity> findTop1ByIsImportantTrueOrderByCreatedDateDesc();
 
-    List<NoticeEntity> findTop4ByIsImportantFalseOrderByCreatedDateDesc();
+    List<NoticeEntity> findTop4ByIsImportantFalseOrderByCreatedDateDescIdDesc();
 
 }
