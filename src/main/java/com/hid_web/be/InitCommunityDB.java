@@ -9,7 +9,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -17,7 +18,7 @@ public class InitCommunityDB {
 
     private final InitService initService;
 
-    @PostConstruct
+    //@PostConstruct
     public void init() {
         initService.dbInit();
     }
@@ -31,31 +32,32 @@ public class InitCommunityDB {
 
         public void dbInit() {
 
-            for (int i = 1; i <= 20; i++) {
-                NoticeEntity notice = new NoticeEntity();
-                notice.setTitle(i % 5 == 0 ? "중요 공지사항 " + i : "일반 공지사항 " + i);
-                notice.setAuthor(i % 3 == 0 ? "TA" : "Council");
-                notice.setCreatedDate(LocalDateTime.now().minusDays(20-i));
-                notice.setViews(0);
-                notice.setAttachmentUrl(i % 4 == 0 ? "https://example.com/file" + i + ".pdf" : null);
-                notice.setImportant(i % 5 == 0);
-                em.persist(notice);
-            }
+            NoticeEntity notice = NoticeEntity.builder()
+                    .uuid("notice-uuid-123")
+                    .title("공지사항 예제")
+                    .author("Admin")
+                    .createdDate(LocalDate.now())
+                    .content("공지사항 본문 내용입니다.")
+                    .views(0)
+                    .isImportant(true)
+                    .attachmentUrls(List.of("https://s3-bucket-url/notice/attachments/sample.pdf"))
+                    .imageUrls(List.of("https://s3-bucket-url/notice/images/sample.jpg"))
+                    .build();
+            em.persist(notice);
 
-            for (int i = 1; i <= 20; i++) {
-                NewsEventEntity newsEvent = new NewsEventEntity();
-                newsEvent.setThumbnailUrl("https://example.com/image" + i + ".jpg");
-                newsEvent.setCreatedDate(LocalDateTime.now().minusDays(20-i));
-                newsEvent.setTitle("뉴스이벤트 제목 " + i);
-                newsEvent.setCategory(i % 4 == 0 ? NewsEventCategory.RECRUIT :
-                        i % 4 == 1 ? NewsEventCategory.CONTEST :
-                                i % 4 == 2 ? NewsEventCategory.LECTURE_SEMINAR :
-                                        NewsEventCategory.AWARD);
-                newsEvent.setContent("뉴스 & 이벤트 본문 내용 " + i);
-                newsEvent.setAttachmentUrl(i % 2 == 0 ? "https://example.com/file" + i + ".pdf" : null);
-                newsEvent.setViews(0);
-                em.persist(newsEvent);
-            }
+            NewsEventEntity newsEvent = NewsEventEntity.builder()
+                    .uuid("newsEvent-uuid-456")
+                    .title("뉴스이벤트 예제")
+                    .category(NewsEventCategory.AWARD)
+                    .createdDate(LocalDate.now())
+                    .content("뉴스이벤트 본문 내용입니다.")
+                    .views(0)
+                    .thumbnailUrl("https://s3-bucket-url/newsEvent/thumbnails/sample-thumbnail.jpg")
+                    .attachmentUrls(List.of("https://s3-bucket-url/newsEvent/attachments/sample-file.pdf"))
+                    .imageUrls(List.of("https://s3-bucket-url/newsEvent/images/sample1.jpg"))
+                    .build();
+            em.persist(newsEvent);
+
         }
     }
 }
