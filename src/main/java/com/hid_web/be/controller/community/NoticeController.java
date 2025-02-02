@@ -4,7 +4,10 @@ import com.hid_web.be.controller.community.response.NoticeDetailResponse;
 import com.hid_web.be.controller.community.response.NoticeResponse;
 import com.hid_web.be.domain.community.NoticeService;
 import com.hid_web.be.storage.community.NoticeEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +26,11 @@ public class NoticeController {
     }
 
     @GetMapping
-    public List<NoticeResponse> getAllNotices(Pageable pageable) {
+    public Page<NoticeResponse> getAllNotices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         return noticeService.getAllNotices(pageable);
     }
 

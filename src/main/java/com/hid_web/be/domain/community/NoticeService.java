@@ -7,6 +7,8 @@ import com.hid_web.be.storage.community.NoticeEntity;
 import com.hid_web.be.storage.community.NoticeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,18 +29,38 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final S3Uploader s3Uploader;
 
-    public List<NoticeResponse> getAllNotices(Pageable pageable) {
-        List<NoticeEntity> importantNotices = noticeRepository.findTop3ByIsImportantTrueOrderByCreatedDateDescIdDesc();
-
-        int remainingCount = pageable.getPageSize() - importantNotices.size();
-        Pageable generalPageable = PageRequest.of(pageable.getPageNumber(), remainingCount);
-        List<NoticeEntity> generalNotices = noticeRepository.findByIsImportantFalseOrderByCreatedDateDescIdDesc(generalPageable);
-
+    public Page<NoticeResponse> getAllNotices(Pageable pageable) {
         List<NoticeResponse> allNotices = new ArrayList<>();
-        importantNotices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
-        generalNotices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
+        long totalElements = noticeRepository.count(); // 전체 데이터 개수
 
-        return allNotices;
+        if (pageable.getPageNumber() == 0) { // 첫 번째 페이지
+            // 중요 공지 최대 3개 조회
+            List<NoticeEntity> importantNotices = noticeRepository.findTop3ByIsImportantTrueOrderByCreatedDateDescIdDesc();
+            importantNotices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
+
+            // 중요 공지 ID 수집
+            Set<Long> importantNoticeIds = importantNotices.stream()
+                    .map(NoticeEntity::getId)
+                    .collect(Collectors.toSet());
+
+            // 나머지 공지 조회 (중복 제거 없이 우선 전체 데이터 가져오기)
+            Pageable remainingPageable = PageRequest.of(0, pageable.getPageSize());
+            Page<NoticeEntity> remainingNotices = noticeRepository.findAllByOrderByCreatedDateDescIdDesc(remainingPageable);
+
+            // 문제 해결: 중복 제거 로직 수정
+            for (NoticeEntity notice : remainingNotices) {
+                if (!importantNoticeIds.contains(notice.getId()) || importantNoticeIds.isEmpty()) {
+                    allNotices.add(new NoticeResponse(notice));
+                }
+            }
+
+        } else { // 두 번째 페이지부터는 중요/일반 구분 없이 표시
+            Page<NoticeEntity> notices = noticeRepository.findAllByOrderByCreatedDateDescIdDesc(pageable);
+            notices.forEach(notice -> allNotices.add(new NoticeResponse(notice)));
+        }
+
+        return new PageImpl<>(allNotices, pageable, totalElements);
+
     }
 
     @Transactional

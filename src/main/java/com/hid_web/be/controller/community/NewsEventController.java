@@ -5,7 +5,10 @@ import com.hid_web.be.controller.community.response.NewsEventResponse;
 import com.hid_web.be.domain.community.NewsEventService;
 import com.hid_web.be.storage.community.NewsEventEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +24,11 @@ public class NewsEventController {
     private final NewsEventService newsEventService;
 
     @GetMapping
-    public List<NewsEventResponse> getAllNewsEvents(Pageable pageable) {
+    public Page<NewsEventResponse> getAllNewsEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         return newsEventService.getAllNewsEvents(pageable);
     }
 

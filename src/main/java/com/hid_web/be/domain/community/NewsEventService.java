@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,19 +23,10 @@ public class NewsEventService {
     private final NewsEventRepository newsEventRepository;
     private final S3Uploader s3Uploader;
 
-    public List<NewsEventResponse> getAllNewsEvents(Pageable pageable) {
+    public Page<NewsEventResponse> getAllNewsEvents(Pageable pageable) {
         return newsEventRepository.findTop12ByOrderByCreatedDateDescIdDesc(pageable)
-                .stream()
-                .map(NewsEventResponse::new)
-                .collect(Collectors.toList());
+                .map(NewsEventResponse::new);
     }
-
-//    public Page<NewsEventResponse> getAllNewsEvents(Pageable pageable) {
-//        return newsEventRepository.findTop12ByOrderByCreatedDateDescIdAsc()
-//                .stream()
-//                .map(NewsEventResponse::new)
-//                .collect(Collectors.toList());
-//    }
 
     public NewsEventDetailResponse getNewsEventDetail(Long newsEventId) {
         NewsEventEntity newsEvent = newsEventRepository.findById(newsEventId)
