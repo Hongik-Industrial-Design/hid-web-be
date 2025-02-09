@@ -1,5 +1,6 @@
 package com.hid_web.be.storage.community;
 
+import com.hid_web.be.domain.community.NoticeAuthorType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,8 +27,9 @@ public class NoticeEntity {
     @Column(nullable = false, length = 255)
     private String title;
 
-    @Column(nullable = false)
-    private String author;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "author", nullable = false)
+    private NoticeAuthorType author;
 
     @Column(name = "created_date", nullable = false)
     private LocalDate createdDate;
@@ -50,4 +52,5 @@ public class NoticeEntity {
 
     @Column(name = "is_important", nullable = false)
     private boolean isImportant;
+
 }

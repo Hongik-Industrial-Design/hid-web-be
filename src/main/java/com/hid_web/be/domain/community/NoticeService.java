@@ -1,10 +1,13 @@
 package com.hid_web.be.domain.community;
 
+import com.hid_web.be.controller.community.request.CreateNoticeRequest;
+import com.hid_web.be.controller.community.request.UpdateNoticeRequest;
 import com.hid_web.be.controller.community.response.NoticeDetailResponse;
 import com.hid_web.be.controller.community.response.NoticeResponse;
 import com.hid_web.be.domain.s3.S3Uploader;
 import com.hid_web.be.storage.community.NoticeEntity;
 import com.hid_web.be.storage.community.NoticeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,7 +15,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -75,43 +77,115 @@ public class NoticeService {
     }
 
     @Transactional
-    public NoticeEntity createNotice(String title, String author,
-                                     List<MultipartFile> images,
-                                     List<MultipartFile> attachments,
-                                     String content, boolean isImportant) throws IOException {
+    public NoticeEntity createNotice(CreateNoticeRequest request) throws IOException {
+
+        // 필수값 검증
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수 입력 값입니다.");
+        }
+
+        if (request.getAuthor() == null || request.getAuthor().trim().isEmpty()) {
+            throw new IllegalArgumentException("작성자는 필수 입력 값입니다.");
+        }
 
         String noticeUUID = UUID.randomUUID().toString();  // UUID 생성
 
         // S3 업로드 (이미지 & 첨부파일)
-        List<String> imageUrls = images != null ? s3Uploader.uploadFiles(images, "notice/" + noticeUUID + "/images") : null;
-        List<String> attachmentUrls = attachments != null ? s3Uploader.uploadFiles(attachments, "notice/" + noticeUUID + "/attachments") : null;
+        List<String> imageUrls = request.getImages() != null
+                ? s3Uploader.uploadFiles(request.getImages(), "notice/" + noticeUUID + "/images")
+                : null;
+
+        List<String> attachmentUrls = request.getAttachments() != null
+                ? s3Uploader.uploadFiles(request.getAttachments(), "notice/" + noticeUUID + "/attachments")
+                : null;
 
         // DB 저장
-        NoticeEntity notice = NoticeEntity.builder()
-                .uuid(noticeUUID)
-                .title(title)
-                .author(author)
-                .createdDate(LocalDate.now())
-                .imageUrls(imageUrls)
-                .attachmentUrls(attachmentUrls)
-                .content(content)
-                .isImportant(isImportant)
-                .views(0)
-                .build();
+        NoticeEntity notice = new NoticeEntity();
+        notice.setUuid(noticeUUID);
+        notice.setTitle(request.getTitle());
+        notice.setAuthor(request.getAuthorEnum());
+        notice.setCreatedDate(LocalDate.now());
+        notice.setImageUrls(imageUrls);
+        notice.setAttachmentUrls(attachmentUrls);
+        notice.setContent(request.getContent());
+        notice.setImportant(request.getIsImportant());
+        notice.setViews(0);
 
         return noticeRepository.save(notice);
     }
 
-    public void deleteNotice(Long id) {
+
+    @Transactional
+    public NoticeEntity updateNotice(Long id, UpdateNoticeRequest request) throws IOException {
+        // 기존 공지사항 조회
         NoticeEntity notice = noticeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("공지사항을 찾을 수 없습니다."));
 
-        // S3에 저장된 첨부파일 및 이미지 삭제
-        s3Uploader.deleteFiles(notice.getAttachmentUrls());
-        s3Uploader.deleteFiles(notice.getImageUrls());
+        // 필수값 검증
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("제목은 필수 입력 값입니다.");
+        }
+
+        if (request.getAuthor() == null || request.getAuthor().trim().isEmpty()) {
+            throw new IllegalArgumentException("작성자는 필수 입력 값입니다.");
+        }
+
+        // 기존 S3 이미지 및 첨부파일 삭제 (새로운 파일이 들어올 경우만)
+        if (request.getImages() != null && !request.getImages().isEmpty()) {
+            s3Uploader.deleteFiles(notice.getImageUrls()); // 기존 이미지 삭제
+        }
+        if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
+            s3Uploader.deleteFiles(notice.getAttachmentUrls()); // 기존 첨부파일 삭제
+        }
+
+        // 새 이미지 & 첨부파일 S3 업로드
+        List<String> newImageUrls = request.getImages() != null ?
+                s3Uploader.uploadFiles(request.getImages(), "notice/" + notice.getUuid() + "/images") : notice.getImageUrls();
+
+        List<String> newAttachmentUrls = request.getAttachments() != null ?
+                s3Uploader.uploadFiles(request.getAttachments(), "notice/" + notice.getUuid() + "/attachments") : notice.getAttachmentUrls();
+
+        // 공지사항 정보 업데이트
+        notice.setTitle(request.getTitle());
+        notice.setContent(request.getContent());
+        notice.setAuthor(request.getAuthorEnum());
+        notice.setImageUrls(newImageUrls);
+        notice.setAttachmentUrls(newAttachmentUrls);
+        notice.setImportant(request.getIsImportant());
+
+        return noticeRepository.save(notice);
+    }
+
+    @Transactional
+    public void deleteNotice(Long id) {
+        NoticeEntity notice = noticeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("공지사항을 찾을 수 없습니다."));
+
+        // S3에서 이미지 및 첨부파일 삭제
+        if (notice.getAttachmentUrls() != null) {
+            s3Uploader.deleteFiles(notice.getAttachmentUrls());
+        }
+        if (notice.getImageUrls() != null) {
+            s3Uploader.deleteFiles(notice.getImageUrls());
+        }
 
         // DB에서 공지사항 삭제
         noticeRepository.deleteById(id);
+    }
+
+    // 복수개 공지사항 삭제
+    @Transactional
+    public void deleteNotices(List<Long> noticeIds) {
+        List<NoticeEntity> notices = noticeRepository.findAllById(noticeIds);
+        for (NoticeEntity notice : notices) {
+            if (notice.getAttachmentUrls() != null) {
+                s3Uploader.deleteFiles(notice.getAttachmentUrls());
+            }
+            if (notice.getImageUrls() != null) {
+                s3Uploader.deleteFiles(notice.getImageUrls());
+            }
+        }
+        noticeRepository.deleteAllById(noticeIds);
     }
 
 }
