@@ -71,12 +71,16 @@ public class S3Uploader {
         );
     }
 
-    // 다중 파일 삭제 (S3)
+    // 다중 파일 삭제
     public void deleteFiles(List<String> fileUrls) {
-        if (fileUrls != null && !fileUrls.isEmpty()) {
-            for (String fileUrl : fileUrls) {
-                deleteFile(fileUrl);
-            }
+        if (fileUrls == null || fileUrls.isEmpty()) return;
+
+        for (String fileUrl : fileUrls) {
+            String key = fileUrl.replace("https://" + bucketName + ".s3.amazonaws.com/", "");
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build());
         }
     }
 

@@ -24,7 +24,7 @@ public class NoticeDetailResponse {
     public NoticeDetailResponse(NoticeEntity entity) {
         this.id = entity.getId();
         this.title = entity.getTitle();
-        this.author = entity.getAuthor();
+        this.author = entity.getAuthor().name();
         this.createdDate = entity.getCreatedDate();
         this.views = entity.getViews();
         this.attachmentUrls = entity.getAttachmentUrls();

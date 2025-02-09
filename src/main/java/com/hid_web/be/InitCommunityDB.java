@@ -1,6 +1,7 @@
 package com.hid_web.be;
 
 import com.hid_web.be.domain.community.NewsEventCategory;
+import com.hid_web.be.domain.community.NoticeAuthorType;
 import com.hid_web.be.storage.community.NewsEventEntity;
 import com.hid_web.be.storage.community.NoticeEntity;
 import jakarta.annotation.PostConstruct;
@@ -35,7 +36,7 @@ public class InitCommunityDB {
             NoticeEntity notice = NoticeEntity.builder()
                     .uuid("notice-uuid-123")
                     .title("공지사항 예제")
-                    .author("Admin")
+                    .author(NoticeAuthorType.valueOf("TA"))
                     .createdDate(LocalDate.now())
                     .content("공지사항 본문 내용입니다.")
                     .views(0)
