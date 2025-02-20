@@ -10,9 +10,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -48,10 +46,17 @@ public class S3Uploader {
 
     // S3 업로드 로직
     private String uploadToS3(MultipartFile file, String objectKey) throws IOException {
+        String contentType = file.getContentType();
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        // S3 업로드 요청
         s3Client.putObject(
                 PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(objectKey)
+                        .contentType(contentType)
                         .build(),
                 RequestBody.fromBytes(file.getBytes())
         );
