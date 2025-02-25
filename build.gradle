@@ -33,6 +33,7 @@ dependencies {
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3' // S3 연동
 	implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store' // Parameter Store 연동
 	implementation 'org.springframework.boot:spring-boot-starter-validation' // 유효성 검사
+	implementation 'commons-io:commons-io:2.11.0'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'

@@ -5,7 +5,7 @@ import com.hid_web.be.controller.community.response.NewsEventResponse;
 import com.hid_web.be.domain.s3.S3Uploader;
 import com.hid_web.be.storage.community.NewsEventEntity;
 import com.hid_web.be.storage.community.NewsEventRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
