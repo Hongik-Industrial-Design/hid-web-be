@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -136,17 +135,17 @@ public class S3Uploader {
         }
     }
 
-//    // 단일 파일 삭제 (S3)
-//    public void deleteFile(String fileUrl) {
-//        String objectKey = extractObjectKeyFromUrl(fileUrl);
-//
-//        s3Client.deleteObject(
-//                DeleteObjectRequest.builder()
-//                        .bucket(bucketName)
-//                        .key(objectKey)
-//                        .build()
-//        );
-//    }
+    // 단일 파일 삭제 (S3)
+    public void deleteFile(String fileUrl) throws URISyntaxException {
+        String objectKey = extractObjectKeyFromUrl(fileUrl);
+
+        s3Client.deleteObject(
+                DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(objectKey)
+                        .build()
+        );
+    }
 
     // 다중 파일 삭제
     public void deleteFiles(List<String> fileUrls) {

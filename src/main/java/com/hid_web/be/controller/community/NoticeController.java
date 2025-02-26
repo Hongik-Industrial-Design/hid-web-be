@@ -9,7 +9,6 @@ import com.hid_web.be.domain.community.NoticeService;
 import com.hid_web.be.storage.community.NoticeEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
