@@ -1,13 +1,12 @@
 package com.hid_web.be;
 
-import com.hid_web.be.storage.exhibit.ExhibitEntity;
-import com.hid_web.be.storage.exhibit.ExhibitArtistEntity;
+import com.hid_web.be.storage.content.ContentMainVideoEntity;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -15,10 +14,9 @@ import java.util.List;
 public class InitDB {
     private final InitService initService;
 
-//    @PostConstruct
+    @PostConstruct
     public void init() {
-        initService.dbInit1();
-        initService.dbInit2();
+        initService.dbInit();
     }
 
     @Component
@@ -28,60 +26,34 @@ public class InitDB {
 
         private final EntityManager em;
 
-        public void dbInit1() {
-            ExhibitEntity exhibitEntity = new ExhibitEntity();
-            List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
+        public void dbInit() {
+            Long year2024 = 2024L;
+            List<ContentMainVideoEntity> existingVideos2024 = em.createQuery(
+                            "SELECT v FROM ContentMainVideoEntity v WHERE v.year = :year", ContentMainVideoEntity.class)
+                    .setParameter("year", year2024)
+                    .getResultList();
 
-            exhibitEntity.setMainImgUrl("대표 이미지");
+            if (existingVideos2024.isEmpty()) {
+                ContentMainVideoEntity contentMainVideoEntity2024 = new ContentMainVideoEntity();
+                contentMainVideoEntity2024.setTitle("2024 졸업 전시 영상");
+                contentMainVideoEntity2024.setS3ObjectKey("graduation-videos/2024/2024_graduation_video.mp4");
+                contentMainVideoEntity2024.setYear(year2024);
+                em.persist(contentMainVideoEntity2024);
+            }
 
-            ExhibitArtistEntity exhibitArtistEntityEntityKZ = new ExhibitArtistEntity();
+            Long year2023 = 2023L;
+            List<ContentMainVideoEntity> existingVideos2023 = em.createQuery(
+                            "SELECT v FROM ContentMainVideoEntity v WHERE v.year = :year", ContentMainVideoEntity.class)
+                    .setParameter("year", year2023)
+                    .getResultList();
 
-            exhibitEntity.setArtistEntities(exhibitArtistEntities);
-
-            exhibitEntity.setTitleKo("여름 전시 제목");
-            exhibitEntity.setTitleEn("Summer Exhibit Title");
-            exhibitEntity.setSubTitleKo("여름 전시 부제");
-            exhibitEntity.setSubTitleEn("Summer Exhibit Subtitle");
-            exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 1");
-            exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 1");
-            exhibitEntity.setVideoUrl("전시 영상 - 1");
-
-            exhibitArtistEntityEntityKZ.setNameEn("Designer A");
-            exhibitArtistEntities.add(exhibitArtistEntityEntityKZ);
-
-            ExhibitArtistEntity exhibitArtistEntityEntityBM = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityBM.setNameEn("Designer B");
-            exhibitArtistEntities.add(exhibitArtistEntityEntityBM);
-
-            em.persist(exhibitEntity);
+            if (existingVideos2023.isEmpty()) {
+                ContentMainVideoEntity contentMainVideoEntity2023 = new ContentMainVideoEntity();
+                contentMainVideoEntity2023.setTitle("2023 졸업 전시 영상");
+                contentMainVideoEntity2023.setS3ObjectKey("graduation-videos/2023/2023_graduation_video.mp4");
+                contentMainVideoEntity2023.setYear(year2023);
+                em.persist(contentMainVideoEntity2023);
+            }
         }
-
-        public void dbInit2() {
-            ExhibitEntity exhibitEntity = new ExhibitEntity();
-            List<ExhibitArtistEntity> exhibitArtistEntities = new ArrayList<>();
-
-            exhibitEntity.setArtistEntities(exhibitArtistEntities);
-
-            exhibitEntity.setTitleKo("여름 전시 제목");
-            exhibitEntity.setTitleEn("Summer Exhibit Title");
-            exhibitEntity.setSubTitleKo("여름 전시 부제");
-            exhibitEntity.setSubTitleEn("Summer Exhibit Subtitle");
-            exhibitEntity.setTextKo("홍익대학교 산업디자인학과 2024 여름 전시 - 2");
-            exhibitEntity.setTextEn("HID Design 2024 Summer Exhibit - 2");
-            exhibitEntity.setVideoUrl("전시 영상 - 2");
-
-            exhibitEntity.setMainImgUrl("대표 이미지");
-
-            ExhibitArtistEntity exhibitArtistEntityEntityJS = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityJS.setNameEn("Designer C");
-            exhibitArtistEntities.add(exhibitArtistEntityEntityJS);
-
-            ExhibitArtistEntity exhibitArtistEntityEntityYY = new ExhibitArtistEntity();
-            exhibitArtistEntityEntityYY.setNameEn("Designer D");
-            exhibitArtistEntities.add(exhibitArtistEntityEntityYY);
-
-            em.persist(exhibitEntity);
-        }
-
     }
 }
