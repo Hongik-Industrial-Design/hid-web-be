@@ -22,7 +22,7 @@ public class ExhibitEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ExhibitType exhibitType;
+    private ExhibitType type;
 
     @Column(nullable = false)
     private int year;

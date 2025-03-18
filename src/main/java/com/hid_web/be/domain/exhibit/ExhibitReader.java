@@ -18,4 +18,12 @@ public class ExhibitReader {
     public ExhibitEntity findExhibitById(Long exhibitId) {
         return exhibitRepository.findExhibitByExhibitId(exhibitId);
     }
+
+    public List<ExhibitEntity> searchByArtistName(String searchTerm, ExhibitType type, String year) {
+        return exhibitRepository.searchByArtistName(searchTerm, type, year);
+    }
+
+    public List<ExhibitEntity> searchByTitle(String searchTerm, ExhibitType type, String year) {
+        return exhibitRepository.searchByTitle(searchTerm, type, year);
+    }
 }
