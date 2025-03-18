@@ -222,7 +222,7 @@ public class ExhibitService {
         // 전시 상세 텍스트 Update
         if (details != null) {
             if (details.getExhibitType() != null) {
-                exhibitEntity.setExhibitType(details.getExhibitType());
+                exhibitEntity.setType(details.getExhibitType());
             }
             if (details.getYear() != null) {
                 exhibitEntity.setYear(details.getYear());
@@ -352,6 +352,22 @@ public class ExhibitService {
 
         s3Writer.deleteObjects(exhibitEntity.getExhibitUUID());
         exhibitWriter.deleteExhibit(exhibitId);
+    }
+
+    public List<ExhibitEntity> searchExhibits(
+            String searchTerm,
+            ExhibitType exhibitType,
+            String year,
+            SearchType searchType
+    ) {
+        switch (searchType) {
+            case ARTIST:
+                return exhibitReader.searchByArtistName(searchTerm, exhibitType, year);
+            case TITLE:
+                return exhibitReader.searchByTitle(searchTerm, exhibitType, year);
+            default:
+                throw new IllegalArgumentException("유효하지 않은 검색 타입입니다: " + searchType);
+        }
     }
 }
 

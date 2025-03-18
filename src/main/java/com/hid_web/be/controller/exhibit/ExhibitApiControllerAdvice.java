@@ -1,4 +1,4 @@
-package com.hid_web.be.controller;
+package com.hid_web.be.controller.exhibit;
 
 import com.hid_web.be.support.error.ErrorCode;
 import com.hid_web.be.support.error.ErrorResponse;

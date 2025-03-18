@@ -4,6 +4,8 @@ import com.hid_web.be.controller.exhibit.request.CreateExhibitRequest;
 import com.hid_web.be.controller.exhibit.request.UpdateExhibitRequest;
 import com.hid_web.be.controller.exhibit.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.exhibit.response.ExhibitResponse;
+import com.hid_web.be.domain.exhibit.ExhibitType;
+import com.hid_web.be.domain.exhibit.SearchType;
 import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import com.hid_web.be.domain.exhibit.ExhibitService;
 import lombok.AllArgsConstructor;
@@ -80,6 +82,24 @@ public class ExhibitController {
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ExhibitPreviewResponse>> searchExhibits(
+            @RequestParam ExhibitType exhibitType,
+            @RequestParam String year,
+            @RequestParam SearchType searchType,
+            @RequestParam String searchTerm
+    ) {
+        List<ExhibitEntity> results = exhibitService.searchExhibits(
+                searchTerm, exhibitType, year, searchType
+        );
+
+        List<ExhibitPreviewResponse> previews = results.stream()
+                .map(ExhibitPreviewResponse::of)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(previews);
     }
 
     @Data
