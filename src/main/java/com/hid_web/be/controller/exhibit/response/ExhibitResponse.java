@@ -13,7 +13,7 @@ import java.util.List;
 public class ExhibitResponse {
     private Long exhibitId;
     private ExhibitType exhibitType;
-    private Integer year;
+    private String year;
     private String major;
     private String club;
     private String mainImgUrl;
@@ -32,7 +32,7 @@ public class ExhibitResponse {
     public static ExhibitResponse of(ExhibitEntity exhibitEntity) {
         return ExhibitResponse.builder()
                 .exhibitId(exhibitEntity.getExhibitId())
-                .exhibitType(exhibitEntity.getExhibitType())
+                .exhibitType(exhibitEntity.getType())
                 .year(exhibitEntity.getYear())
                 .major(exhibitEntity.getMajor())
                 .club(exhibitEntity.getClub())

@@ -11,8 +11,16 @@ import java.util.List;
 public class ExhibitReader {
     private final ExhibitRepository exhibitRepository;
 
-    public List<ExhibitEntity> findAllExhibit() {
-        return exhibitRepository.findAll();
+    public List<ExhibitEntity> findByTypeAndYear(ExhibitType type, String year) {
+        return exhibitRepository.findByTypeAndYear(type, year);
+    }
+
+    public List<ExhibitEntity> findByTypeAndYearAndClub(ExhibitType exhibitType, String year, String club) {
+        return exhibitRepository.findByTypeAndYearAndClub(exhibitType, year, club);
+    }
+
+    public List<ExhibitEntity> findByTypeAndYearAndMajor(ExhibitType type, String year, String major) {
+        return exhibitRepository.findByTypeAndYearAndMajor(type, year, major);
     }
 
     public ExhibitEntity findExhibitById(Long exhibitId) {

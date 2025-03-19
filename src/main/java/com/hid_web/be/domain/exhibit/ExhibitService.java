@@ -23,8 +23,16 @@ public class ExhibitService {
     private final ExhibitReader exhibitReader;
     private final ExhibitExtractor exhibitExtractor;
 
-    public List<ExhibitEntity> findAllExhibit() {
-        return exhibitReader.findAllExhibit();
+    public List<ExhibitEntity> findExhibitsByTypeYearAndTerm(ExhibitType exhibitType, String year, String term) {
+        if ("ALL".equals(term)) {
+            return exhibitReader.findByTypeAndYear(exhibitType, year);
+        }
+
+        if (exhibitType == ExhibitType.CLUB) {
+            return exhibitReader.findByTypeAndYearAndClub(exhibitType, year, term);
+        } else {
+            return exhibitReader.findByTypeAndYearAndMajor(exhibitType, year, term);
+        }
     }
 
     public ExhibitEntity findExhibitByExhibitId(Long exhibitId) {
