@@ -9,6 +9,13 @@ import java.util.List;
 
 public interface ExhibitRepository extends JpaRepository<ExhibitEntity, Long> {
     List<ExhibitEntity> findAll();
+
+    List<ExhibitEntity> findByTypeAndYear(ExhibitType exhibitType, String year);
+
+    List<ExhibitEntity> findByTypeAndYearAndClub(ExhibitType exhibitType, String year, String club);
+
+    List<ExhibitEntity> findByTypeAndYearAndMajor(ExhibitType exhibitType, String year, String major);
+
     ExhibitEntity findExhibitByExhibitId(Long exhibitId);
 
     @Query("SELECT DISTINCT e FROM ExhibitEntity e " +

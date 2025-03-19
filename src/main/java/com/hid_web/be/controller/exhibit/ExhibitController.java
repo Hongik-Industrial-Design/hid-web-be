@@ -24,14 +24,17 @@ public class ExhibitController {
     private final ExhibitService exhibitService;
 
     @GetMapping("/previews")
-    public ResponseEntity<Result<List<ExhibitPreviewResponse>>> findAllExhibitPreview() {
-        List<ExhibitEntity> exhibitEntityList = exhibitService.findAllExhibit();
-        List<ExhibitPreviewResponse> exhibitPreviewResponseList = exhibitEntityList.stream()
-                .map(e -> ExhibitPreviewResponse.of(e))
+    public ResponseEntity<Result<List<ExhibitPreviewResponse>>> findExhibitPreviewsByTypeYearAndTerm(
+            @RequestParam ExhibitType exhibitType,
+            @RequestParam(defaultValue = "2024") String year,
+            @RequestParam(defaultValue = "ALL") String term) {
+        List<ExhibitEntity> exhibitEntities = exhibitService.findExhibitsByTypeYearAndTerm(exhibitType, year, term);
+
+        List<ExhibitPreviewResponse> exhibitPreviewResponses = exhibitEntities.stream()
+                .map(ExhibitPreviewResponse::of)
                 .collect(Collectors.toList());
 
-        // Result 객체로 리스트를 감싸서 반환
-        return ResponseEntity.ok().body(new Result<>(exhibitPreviewResponseList));
+        return ResponseEntity.ok().body(new Result<>(exhibitPreviewResponses));
     }
 
     @GetMapping("/{exhibitId}")

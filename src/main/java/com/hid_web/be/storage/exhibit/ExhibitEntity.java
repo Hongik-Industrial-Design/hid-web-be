@@ -25,7 +25,7 @@ public class ExhibitEntity {
     private ExhibitType type;
 
     @Column(nullable = false)
-    private int year;
+    private String year;
 
     private String major;
 
