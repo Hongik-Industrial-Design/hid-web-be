@@ -43,4 +43,10 @@ public class ExhibitApiControllerAdvice {
         final ErrorResponse response = ErrorResponse.of(errorCode, e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(Exception.class)
+//    protected ResponseEntity<ErrorResponse> handleException(Exception e) {
+//        final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);
+//        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }

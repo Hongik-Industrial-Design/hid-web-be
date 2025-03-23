@@ -17,7 +17,7 @@ public class ExhibitDetailImgEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long detailImgId;
 
-    private String detailImgUrl;
+    private String detailImgObjectKey;
     private int position;
 }
 

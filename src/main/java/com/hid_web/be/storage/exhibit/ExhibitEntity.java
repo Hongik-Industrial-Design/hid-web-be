@@ -2,9 +2,10 @@ package com.hid_web.be.storage.exhibit;
 
 import com.hid_web.be.domain.exhibit.ExhibitType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class ExhibitEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long exhibitId;
 
     @Column(name = "exhibit_uuid")
@@ -28,14 +30,11 @@ public class ExhibitEntity {
     private String year;
 
     private String major;
-
     private String club;
+    private String mainImgObjectKey;
 
-    private String mainImgUrl;
-
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "exhibit_id")
-    private List<ExhibitSubImgEntity> subImgEntities = new ArrayList<>();
+    private String behanceUrl;
+    private String instagramUrl;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "exhibit_id")
@@ -54,10 +53,10 @@ public class ExhibitEntity {
     private String subTitleEn;
 
     @Column(length = 300)
-    private String textKo;
+    private String descriptionKo;
 
     @Column(length = 700)
-    private String textEn;
+    private String descriptionEn;
 
     private String videoUrl;
 

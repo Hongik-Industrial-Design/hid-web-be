@@ -1,12 +1,13 @@
 package com.hid_web.be.controller.exhibit.response;
 
+import com.hid_web.be.domain.s3.S3UrlConverter;
 import com.hid_web.be.storage.exhibit.ExhibitArtistEntity;
 import lombok.*;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExhibitArtistResponse {
     private Long id;
     private String artistUUID;
@@ -23,7 +24,7 @@ public class ExhibitArtistResponse {
         return ExhibitArtistResponse.builder()
                 .id(exhibitArtistEntity.getArtistId())
                 .artistUUID(exhibitArtistEntity.getArtistUUID())
-                .profileImgUrl(exhibitArtistEntity.getProfileImgUrl())
+                .profileImgUrl(S3UrlConverter.convertCloudfrontUrlFromObjectKey(exhibitArtistEntity.getProfileImgObjectKey()))
                 .nameKo(exhibitArtistEntity.getNameKo())
                 .nameEn(exhibitArtistEntity.getNameEn())
                 .role(exhibitArtistEntity.getRole())

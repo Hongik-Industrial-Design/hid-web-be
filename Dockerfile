@@ -12,7 +12,7 @@ FROM eclipse-temurin:17.0.10_7-jre
 ARG PROFILE
 ENV PROFILE=${PROFILE}
 
-RUN if [ "$PROFILE" != "dev" ] && [ "$PROFILE" != "prod" ]; then echo "Invalid PROFILE argument; must be 'dev' or 'prod'."; exit 1; fi
+RUN if [ "$PROFILE" != "dev" ] && [ "$PROFILE" != "prd" ]; then echo "Invalid PROFILE argument; must be 'dev' or 'prd'."; exit 1; fi
 
 WORKDIR /app
 
