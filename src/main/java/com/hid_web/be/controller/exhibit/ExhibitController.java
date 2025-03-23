@@ -4,15 +4,17 @@ import com.hid_web.be.controller.exhibit.request.CreateExhibitRequest;
 import com.hid_web.be.controller.exhibit.request.UpdateExhibitRequest;
 import com.hid_web.be.controller.exhibit.response.ExhibitPreviewResponse;
 import com.hid_web.be.controller.exhibit.response.ExhibitResponse;
+import com.hid_web.be.domain.exhibit.ExhibitService;
 import com.hid_web.be.domain.exhibit.ExhibitType;
 import com.hid_web.be.domain.exhibit.SearchType;
 import com.hid_web.be.storage.exhibit.ExhibitEntity;
-import com.hid_web.be.domain.exhibit.ExhibitService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/exhibits")
 public class ExhibitController {
     private final ExhibitService exhibitService;
+    /*
+    @GetMapping("/previews") // findAllExhibitPreview -> findExhibitPreviewsByYearAndMajor, findExhibitPreviewsByYearAndClub 임시
+    public ResponseEntity<Result<List<ExhibitPreviewResponse>>> findAllExhibitPreview() {
+        List<ExhibitEntity> exhibitEntityList = exhibitService.findAllExhibit();
+        List<ExhibitPreviewResponse> exhibitPreviewResponseList = exhibitEntityList.stream()
+                .map(e -> ExhibitPreviewResponse.of(e))
+                .collect(Collectors.toList());
+
+        // Result 객체로 리스트를 감싸서 반환
+        return ResponseEntity.ok().body(new Result<>(exhibitPreviewResponseList));
+    }
+    */
 
     @GetMapping("/previews")
     public ResponseEntity<Result<List<ExhibitPreviewResponse>>> findExhibitPreviewsByTypeYearAndTerm(
@@ -38,20 +52,21 @@ public class ExhibitController {
     }
 
     @GetMapping("/{exhibitId}")
-    public ResponseEntity<ExhibitResponse> findExhibitById(@PathVariable Long exhibitId) {
+    public ResponseEntity<ExhibitResponse> findExhibitByExhibitId(@PathVariable Long exhibitId) {
 
         ExhibitEntity exhibitEntity = exhibitService.findExhibitByExhibitId(exhibitId);
 
         return ResponseEntity.ok().body(ExhibitResponse.of(exhibitEntity));
     }
 
-
-    @PostMapping
-    public ResponseEntity<ExhibitResponse> createExhibit(@ModelAttribute CreateExhibitRequest createExhibitRequest) {
+    /*
+    @Valid 어노테이션이 있으면 Spring이 자동으로 Validation을 수행하고, 실패 시 MethodArgumentNotValidException을 발생시키며, 이를 @ExceptionHandler가 처리한다.
+     */
+    @PostMapping("/admin")
+    public ResponseEntity<ExhibitResponse> createExhibit(@Valid @ModelAttribute CreateExhibitRequest createExhibitRequest) {
         try {
             ExhibitEntity exhibitEntity = exhibitService.createExhibit(
                     createExhibitRequest.getMainImgFile(),
-                    createExhibitRequest.toSubImgs(),
                     createExhibitRequest.toDetailImgs(),
                     createExhibitRequest.toDetails(),
                     createExhibitRequest.toArtists()
@@ -63,23 +78,21 @@ public class ExhibitController {
         }
     }
 
-    @DeleteMapping("/{exhibitId}")
+    @DeleteMapping("/admin/{exhibitId}")
     public ResponseEntity<Void> deleteExhibit(@PathVariable Long exhibitId) {
         exhibitService.deleteExhibit(exhibitId);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{exhibitId}")
-    public ResponseEntity<ExhibitResponse> updateExhibit(@PathVariable Long exhibitId, @ModelAttribute UpdateExhibitRequest updateExhibitRequest) {
+    @PutMapping("/admin/{exhibitId}")
+    public ResponseEntity<ExhibitResponse> updateExhibit(@Valid @PathVariable Long exhibitId, @ModelAttribute UpdateExhibitRequest updateExhibitRequest) {
         try {
             ExhibitEntity updatedExhibit = exhibitService.updateExhibit(
                     exhibitId,
                     updateExhibitRequest.getMainImgFile(),
-                    updateExhibitRequest.toSubImgs(),
                     updateExhibitRequest.toDetailImgs(),
                     updateExhibitRequest.toDetails(),
                     updateExhibitRequest.toArtists());
-
 
             return ResponseEntity.ok(ExhibitResponse.of(updatedExhibit));
         } catch (IOException e) {
@@ -107,7 +120,7 @@ public class ExhibitController {
 
     @Data
     @AllArgsConstructor
-    public class Result<T> {
+    public static class Result<T> {
         private T data;
     }
 }

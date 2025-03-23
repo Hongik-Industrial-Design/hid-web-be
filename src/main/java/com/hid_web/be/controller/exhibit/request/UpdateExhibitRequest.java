@@ -1,39 +1,27 @@
 package com.hid_web.be.controller.exhibit.request;
 
-import com.hid_web.be.domain.exhibit.ExhibitSubImg;
 import com.hid_web.be.domain.exhibit.ExhibitArtist;
 import com.hid_web.be.domain.exhibit.ExhibitDetail;
 import com.hid_web.be.domain.exhibit.ExhibitDetailImg;
-import lombok.*;
+import jakarta.validation.Valid;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UpdateExhibitRequest {
     private MultipartFile mainImgFile;
-    private List<UpdateExhibitSubImgRequest> subImgs;
+
+    @Valid
     private List<UpdateExhibitDetailImgRequest> detailImgs;
+    @Valid
     private UpdateExhibitDetailRequest details;
+    @Valid
     private List<UpdateExhibitArtistRequest> artists;
-
-    public List<ExhibitSubImg> toSubImgs() {
-        if (subImgs == null) {
-            return null;
-        }
-
-        return subImgs.stream()
-                .map(request -> new ExhibitSubImg(
-                        request.getFile(),
-                        request.getUrl(),
-                        request.getPosition(),
-                        request.getType()
-                ))
-                .collect(Collectors.toList());
-    }
 
     public List<ExhibitDetailImg> toDetailImgs() {
         if (detailImgs == null) {
@@ -56,16 +44,15 @@ public class UpdateExhibitRequest {
         }
 
         return new ExhibitDetail(
-                details.getExhibitType(),
                 details.getYear(),
-                details.getMajor(),
-                details.getClub(),
+                details.getBehanceUrl(),
+                details.getInstagramUrl(),
                 details.getTitleKo(),
                 details.getTitleEn(),
                 details.getSubTitleKo(),
                 details.getSubTitleEn(),
-                details.getTextKo(),
-                details.getTextEn(),
+                details.getDescriptionKo(),
+                details.getDescriptionEn(),
                 details.getVideoUrl()
         );
     }

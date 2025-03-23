@@ -1,6 +1,7 @@
 package com.hid_web.be.controller.exhibit.response;
 
 import com.hid_web.be.domain.exhibit.ExhibitType;
+import com.hid_web.be.domain.s3.S3UrlConverter;
 import com.hid_web.be.storage.exhibit.ExhibitEntity;
 import lombok.*;
 
@@ -8,23 +9,24 @@ import java.util.List;
 
 @Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA, Jackson 라이브러리에서 기본 생성자 필요
+@AllArgsConstructor(access = AccessLevel.PROTECTED) // 빌더 패턴에서 필요
 public class ExhibitResponse {
     private Long exhibitId;
     private ExhibitType exhibitType;
     private String year;
     private String major;
     private String club;
+    private String instagramUrl;
+    private String behanceUrl;
     private String mainImgUrl;
-    private List<ExhibitSubImgResponse> subImgs;
     private List<ExhibitDetailImgResponse> detailImgs;
     private String titleKo;
     private String titleEn;
     private String subTitleKo;
     private String subTitleEn;
-    private String textKo;
-    private String textEn;
+    private String descriptionKo;
+    private String descriptionEn;
     private String videoUrl;
     private List<ExhibitArtistResponse> artists;
 
@@ -36,10 +38,9 @@ public class ExhibitResponse {
                 .year(exhibitEntity.getYear())
                 .major(exhibitEntity.getMajor())
                 .club(exhibitEntity.getClub())
-                .mainImgUrl(exhibitEntity.getMainImgUrl())
-                .subImgs(exhibitEntity.getSubImgEntities().stream()
-                        .map(ExhibitSubImgResponse::of)
-                        .toList())
+                .instagramUrl(exhibitEntity.getInstagramUrl())
+                .behanceUrl(exhibitEntity.getBehanceUrl())
+                .mainImgUrl(S3UrlConverter.convertCloudfrontUrlFromObjectKey(exhibitEntity.getMainImgObjectKey()))
                 .detailImgs(exhibitEntity.getDetailImgEntities().stream()
                         .map(ExhibitDetailImgResponse::of)
                         .toList())
@@ -47,8 +48,8 @@ public class ExhibitResponse {
                 .titleEn(exhibitEntity.getTitleEn())
                 .subTitleKo(exhibitEntity.getSubTitleKo())
                 .subTitleEn(exhibitEntity.getSubTitleEn())
-                .textKo(exhibitEntity.getTextKo())
-                .textEn(exhibitEntity.getTextEn())
+                .descriptionKo(exhibitEntity.getDescriptionKo())
+                .descriptionEn(exhibitEntity.getDescriptionEn())
                 .videoUrl(exhibitEntity.getVideoUrl())
                 .artists(exhibitEntity.getArtistEntities().stream()
                         .map(ExhibitArtistResponse::of)
@@ -56,3 +57,4 @@ public class ExhibitResponse {
                 .build();
     }
 }
+
