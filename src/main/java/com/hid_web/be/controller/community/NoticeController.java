@@ -6,7 +6,6 @@ import com.hid_web.be.controller.community.response.CustomPageResponse;
 import com.hid_web.be.controller.community.response.NoticeDetailResponse;
 import com.hid_web.be.controller.community.response.NoticeResponse;
 import com.hid_web.be.domain.community.NoticeService;
-import com.hid_web.be.storage.community.NoticeEntity;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +14,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/notices")
@@ -40,19 +41,19 @@ public class NoticeController {
         return ResponseEntity.ok(noticeService.getNoticeDetail(noticeId));
     }
 
-    // 공지사항 첨부파일 ZIP 다운로드 API 추가
-    @GetMapping("/{noticeId}/download-attachments")
-    public ResponseEntity<byte[]> downloadAttachments(@PathVariable Long noticeId) throws IOException, URISyntaxException {
-        return noticeService.downloadAllAttachmentsAsZip(noticeId);
+    // 공지사항 첨부파일 개별 다운로드 API 추가
+    @GetMapping("/{noticeId}/attachment-urls")
+    public ResponseEntity<Map<String, String>> getAttachmentUrls(@PathVariable Long noticeId) throws FileNotFoundException, URISyntaxException {
+        return noticeService.getAllAttachmentUrls(noticeId);
     }
 
     @PostMapping
-    public ResponseEntity<NoticeEntity> createNotice(@Valid @ModelAttribute CreateNoticeRequest request) throws IOException {
+    public ResponseEntity<NoticeDetailResponse> createNotice(@Valid @ModelAttribute CreateNoticeRequest request) throws IOException {
         return ResponseEntity.ok(noticeService.createNotice(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<NoticeEntity> updateNotice(
+    public ResponseEntity<NoticeDetailResponse> updateNotice(
             @PathVariable Long id,
             @Valid @ModelAttribute UpdateNoticeRequest request
     ) throws IOException {
