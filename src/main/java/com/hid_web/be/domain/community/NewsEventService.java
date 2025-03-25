@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,28 +54,35 @@ public class NewsEventService {
     public NewsEventDetailResponse createNewsEvent(CreateNewsEventRequest request) throws IOException {
         String newsEventUUID = UUID.randomUUID().toString();
 
-        // S3 업로드
-        String thumbnailUrl = request.getThumbnail() != null ?
-                s3Uploader.uploadFile(request.getThumbnail(), "newsEvent/" + newsEventUUID + "/thumbnails") : null;
+        // S3 업로드 (UUID 기반 저장)
+        String thumbnailUrl = null;
 
-        List<String> imageUrls = request.getImages() != null ?
-                s3Uploader.uploadFiles(request.getImages(), "newsEvent/" + newsEventUUID + "/images") : null;
+        if (request.getThumbnail() != null) {
+            thumbnailUrl = s3Uploader.uploadFile(request.getThumbnail(), "newsEvent/" + newsEventUUID + "/thumbnails");
+        }
 
-        List<String> attachmentUrls = request.getAttachments() != null ?
-                s3Uploader.uploadFiles(request.getAttachments(), "newsEvent/" + newsEventUUID + "/attachments") : null;
+        Map<String, String> imageFiles = request.getImages() != null
+                ? s3Uploader.uploadFiles(request.getImages(), "newsEvent/" + newsEventUUID + "/images")
+                : new HashMap<>();
 
-        // DB 저장
-        NewsEventEntity newsEvent = newsEventRepository.save(NewsEventEntity.builder()
+        Map<String, String> attachmentFiles = request.getAttachments() != null
+                ? s3Uploader.uploadFiles(request.getAttachments(), "newsEvent/" + newsEventUUID + "/attachments")
+                : new HashMap<>();
+
+        NewsEventEntity newsEvent = NewsEventEntity.builder()
                 .uuid(newsEventUUID)
+                .thumbnailUrl(thumbnailUrl)
+                .createdDate(LocalDate.now())
                 .title(request.getTitle())
                 .category(request.getCategory())
-                .createdDate(LocalDate.now())
-                .thumbnailUrl(thumbnailUrl)
-                .imageUrls(imageUrls)
-                .attachmentUrls(attachmentUrls)
                 .content(request.getContent())
-                .views(0)
-                .build());
+                .attachmentUrls(new ArrayList<>(attachmentFiles.keySet())) // S3 URL 저장
+                .imageUrls(new ArrayList<>(imageFiles.keySet())) // S3 URL 저장
+                .views(0) // 초기 조회수
+                .build();
+
+        // DB 저장
+        newsEvent = newsEventRepository.save(newsEvent);
 
         return new NewsEventDetailResponse(newsEvent);
     }
@@ -86,26 +92,48 @@ public class NewsEventService {
         NewsEventEntity newsEvent = newsEventRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스이벤트를 찾을 수 없습니다."));
 
-        // S3 업로드 (기존 파일 삭제 후 업로드)
+        // S3 썸네일 업데이트
         if (request.getThumbnail() != null) {
             s3Uploader.deleteFile(newsEvent.getThumbnailUrl());
             newsEvent.setThumbnailUrl(s3Uploader.uploadFile(request.getThumbnail(), "newsEvent/" + newsEvent.getUuid() + "/thumbnails"));
         }
 
+        // S3 이미지 업데이트
         if (request.getImages() != null) {
             s3Uploader.deleteFiles(newsEvent.getImageUrls());
-            newsEvent.setImageUrls(s3Uploader.uploadFiles(request.getImages(), "newsEvent/" + newsEvent.getUuid() + "/images"));
+            newsEvent.setImageUrls(new ArrayList<>());
         }
 
+        // S3 첨부파일 업데이트
         if (request.getAttachments() != null) {
             s3Uploader.deleteFiles(newsEvent.getAttachmentUrls());
-            newsEvent.setAttachmentUrls(s3Uploader.uploadFiles(request.getAttachments(), "newsEvent/" + newsEvent.getUuid() + "/attachments"));
+            newsEvent.setAttachmentUrls(new ArrayList<>());
         }
 
-        // 정보 업데이트
-        newsEvent.setTitle(request.getTitle());
-        newsEvent.setCategory(request.getCategory());
-        newsEvent.setContent(request.getContent());
+        // 새 파일 업로드
+        Map<String, String> newImageFiles = request.getImages() != null
+                ? s3Uploader.uploadFiles(request.getImages(), "newsEvent/" + newsEvent.getUuid() + "/images")
+                : new HashMap<>();
+
+        Map<String, String> newAttachmentFiles = request.getAttachments() != null
+                ? s3Uploader.uploadFiles(request.getAttachments(), "newsEvent/" + newsEvent.getUuid() + "/attachments")
+                : new HashMap<>();
+
+        newsEvent = NewsEventEntity.builder()
+                .id(newsEvent.getId()) // 기존 ID 유지
+                .uuid(newsEvent.getUuid()) // 기존 UUID 유지
+                .thumbnailUrl(newsEvent.getThumbnailUrl())
+                .createdDate(newsEvent.getCreatedDate())
+                .title(request.getTitle())
+                .category(request.getCategory())
+                .content(request.getContent())
+                .attachmentUrls(new ArrayList<>(newAttachmentFiles.keySet())) // S3 URL 저장
+                .imageUrls(new ArrayList<>(newImageFiles.keySet())) // S3 URL 저장
+                .views(newsEvent.getViews()) // 기존 조회수 유지
+                .build();
+
+        // DB 업데이트
+        newsEvent = newsEventRepository.save(newsEvent);
 
         return new NewsEventDetailResponse(newsEvent);
     }
@@ -114,7 +142,7 @@ public class NewsEventService {
         NewsEventEntity newsEvent = newsEventRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("뉴스이벤트를 찾을 수 없습니다."));
 
-        // S3 첨부파일 및 이미지 삭제
+        s3Uploader.deleteFile(newsEvent.getThumbnailUrl());
         s3Uploader.deleteFiles(newsEvent.getAttachmentUrls());
         s3Uploader.deleteFiles(newsEvent.getImageUrls());
 

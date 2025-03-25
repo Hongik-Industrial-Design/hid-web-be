@@ -52,4 +52,5 @@ public class NewsEventEntity {
 
     @Column(nullable = false)
     private int views;
+
 }

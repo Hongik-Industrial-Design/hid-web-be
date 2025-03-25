@@ -10,8 +10,6 @@ import com.hid_web.be.storage.community.NoticeEntity;
 import com.hid_web.be.storage.community.NoticeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +17,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +38,7 @@ public class NoticeService {
         // 유지할 공지를 제외한 나머지를 일반 공지로 전환
         List<Long> importantNoticeIds = importantNotices.stream()
                 .map(NoticeEntity::getId)
-                .collect(Collectors.toList());
+                .toList();
 
         for (NoticeEntity notice : allImportantNotices) {
             if (!importantNoticeIds.contains(notice.getId())) {
@@ -114,31 +106,33 @@ public class NoticeService {
         return new NoticeDetailResponse(notice);
     }
 
-    // 첨부파일 ZIP 다운로드 기능
     @Transactional(readOnly = true)
-    public ResponseEntity<byte[]> downloadAllAttachmentsAsZip(Long noticeId) throws IOException, URISyntaxException {
+    public ResponseEntity<Map<String, String>> getAllAttachmentUrls(Long noticeId) throws FileNotFoundException {
+
         NoticeEntity notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new EntityNotFoundException("공지사항을 찾을 수 없습니다."));
 
-        List<String> attachmentUrls = notice.getAttachmentUrls();
-        if (attachmentUrls == null || attachmentUrls.isEmpty()) {
+        List<String> attachmentKeys = notice.getAttachmentUrls();
+
+        if (attachmentKeys == null || attachmentKeys.isEmpty()) {
             throw new FileNotFoundException("첨부파일이 존재하지 않습니다.");
         }
 
-        String safeFileName = sanitizeFileName(notice.getTitle());
-        byte[] zipData = s3Uploader.downloadAllAsZip(attachmentUrls);
+        Map<String, String> fileUrlMap = new HashMap<>();
 
-        String encodedFileName = URLEncoder.encode(safeFileName, StandardCharsets.UTF_8.toString())
-                .replaceAll("\\+", "%20");
+        for (String fileKey : attachmentKeys) {
+            String originalFileName = s3Uploader.extractOriginalFileName(fileKey);
+            String cloudFrontUrl = s3Uploader.generateCloudFrontUrl(fileKey);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFileName + ".zip\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(zipData);
+            fileUrlMap.put(cloudFrontUrl, originalFileName);
+
+        }
+
+        return ResponseEntity.ok(fileUrlMap);
     }
 
     @Transactional
-    public NoticeEntity createNotice(CreateNoticeRequest request) throws IOException {
+    public NoticeDetailResponse createNotice(CreateNoticeRequest request) throws IOException {
         if (request.getIsImportant()) {
             maintainImportantNotices();
         }
@@ -148,32 +142,34 @@ public class NoticeService {
         String noticeUUID = UUID.randomUUID().toString();  // UUID 생성
 
         // S3 업로드 (이미지 & 첨부파일)
-        List<String> imageUrls = request.getImages() != null
+        Map<String, String> imageFiles = request.getImages() != null
                 ? s3Uploader.uploadFiles(request.getImages(), "notice/" + noticeUUID + "/images")
-                : null;
+                : new HashMap<>();
 
-        List<String> attachmentUrls = request.getAttachments() != null
+        Map<String, String> attachmentFiles = request.getAttachments() != null
                 ? s3Uploader.uploadFiles(request.getAttachments(), "notice/" + noticeUUID + "/attachments")
-                : null;
+                : new HashMap<>();
 
-        // DB 저장
         NoticeEntity notice = new NoticeEntity();
         notice.setUuid(noticeUUID);
         notice.setTitle(request.getTitle());
         notice.setAuthor(request.getAuthorEnum());
         notice.setCreatedDate(LocalDate.now());
-        notice.setImageUrls(imageUrls);
-        notice.setAttachmentUrls(attachmentUrls);
+        notice.setImageUrls(new ArrayList<>(imageFiles.keySet()));
+        notice.setAttachmentUrls(new ArrayList<>(attachmentFiles.keySet()));
         notice.setContent(request.getContent());
         notice.setImportant(request.getIsImportant());
         notice.setViews(0);
 
-        return noticeRepository.save(notice);
+        notice = noticeRepository.save(notice);
+
+        return new NoticeDetailResponse(notice);
+
     }
 
 
     @Transactional
-    public NoticeEntity updateNotice(Long id, UpdateNoticeRequest request) throws IOException {
+    public NoticeDetailResponse updateNotice(Long id, UpdateNoticeRequest request) throws IOException {
 
         validateRequiredFields(request.getTitle(), request.getAuthor());
 
@@ -184,27 +180,33 @@ public class NoticeService {
         // 기존 S3 이미지 및 첨부파일 삭제 (새로운 파일이 들어올 경우만)
         if (request.getImages() != null && !request.getImages().isEmpty()) {
             s3Uploader.deleteFiles(notice.getImageUrls()); // 기존 이미지 삭제
+            notice.setImageUrls(new ArrayList<>()); // 기존 URL 제거
         }
         if (request.getAttachments() != null && !request.getAttachments().isEmpty()) {
             s3Uploader.deleteFiles(notice.getAttachmentUrls()); // 기존 첨부파일 삭제
+            notice.setAttachmentUrls(new ArrayList<>()); // 기존 URL 제거
         }
 
-        // 새 이미지 & 첨부파일 S3 업로드
-        List<String> newImageUrls = request.getImages() != null ?
-                s3Uploader.uploadFiles(request.getImages(), "notice/" + notice.getUuid() + "/images") : notice.getImageUrls();
+        // 새 이미지 & 첨부파일 S3 업로드 (UUID 기반 파일명 사용)
+        Map<String, String> newImageFiles = request.getImages() != null
+                ? s3Uploader.uploadFiles(request.getImages(), "notice/" + notice.getUuid() + "/images")
+                : new HashMap<>();
 
-        List<String> newAttachmentUrls = request.getAttachments() != null ?
-                s3Uploader.uploadFiles(request.getAttachments(), "notice/" + notice.getUuid() + "/attachments") : notice.getAttachmentUrls();
+        Map<String, String> newAttachmentFiles = request.getAttachments() != null
+                ? s3Uploader.uploadFiles(request.getAttachments(), "notice/" + notice.getUuid() + "/attachments")
+                : new HashMap<>();
 
         // 공지사항 정보 업데이트
         notice.setTitle(request.getTitle());
         notice.setContent(request.getContent());
         notice.setAuthor(request.getAuthorEnum());
-        notice.setImageUrls(newImageUrls);
-        notice.setAttachmentUrls(newAttachmentUrls);
+        notice.setImageUrls(new ArrayList<>(newImageFiles.keySet())); // S3 URL 저장
+        notice.setAttachmentUrls(new ArrayList<>(newAttachmentFiles.keySet())); // S3 URL 저장
         notice.setImportant(request.getIsImportant());
 
-        return noticeRepository.save(notice);
+        notice = noticeRepository.save(notice);
+
+        return new NoticeDetailResponse(notice);
     }
 
     @Transactional
@@ -246,10 +248,6 @@ public class NoticeService {
         if (author == null || author.trim().isEmpty()) {
             throw new IllegalArgumentException("작성자는 필수 입력 값입니다.");
         }
-    }
-
-    private String sanitizeFileName(String fileName) {
-        return fileName.replaceAll("[\\\\/:*?\"<>|]", "_").replaceAll(" ", "_");
     }
 
 }
