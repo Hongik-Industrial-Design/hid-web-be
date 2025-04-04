@@ -41,9 +41,9 @@ spring:
       on-profile: dev
 
   datasource:
-    url: jdbc:mysql://localhost:3306/hid # 도커 실행 시 host.docker.internal
-    username: hid
-    password: hid0326
+    url: jdbc:mysql://${DB_URL}:${DB_PORT}/hid # 도커 실행 시 host.docker.internal
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -56,7 +56,7 @@ spring:
         secret-key: ${AWS_SECRET_KEY}
       region:
         static: ${AWS_REGION}
-      cloudfront-domain: df4nh3dlx8zzx.cloudfront.net
+      cloudfront-domain: ${CLOUDFRONT_DOMAIN}
 
 ---
 # Prd 환경 설정 - AWS Parameter Store로 부터 환경변수 설정
