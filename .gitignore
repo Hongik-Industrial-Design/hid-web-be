@@ -38,3 +38,5 @@ out/
 
 # Configuration Files
 application.yaml
+
+.env
