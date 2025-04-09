@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class S3UrlConverter {
+
     public static String convertObjectKeyFromUrl(String url) {
         // CloudFront URL과 S3 URL 모두 처리
         int comIndex = url.indexOf(".com");
@@ -19,8 +20,6 @@ public class S3UrlConverter {
     }
 
     public static String convertCloudfrontUrlFromObjectKey(String objectKey) {
-        String CLOUDFRONT_DEV_DOMAIN= "df4nh3dlx8zzx.cloudfront.net";
-        String CLOUDFRONT_PRD_DOMAIN = "di00vgoc2ngki.cloudfront.net";
-        return "https://" + CLOUDFRONT_PRD_DOMAIN + "/" + objectKey;
+        return "https://d3587x8mdcc9gd.cloudfront.net/" + objectKey;
     }
 }
