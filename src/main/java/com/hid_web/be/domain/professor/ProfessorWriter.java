@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -14,7 +13,7 @@ import java.util.stream.Collectors;
 public class ProfessorWriter {
     private final ProfessorRepository professorRepository;
 
-    public ProfessorEntity createProfessor(UUID professorUUID, CreateProfessorRequest request) {
+    public ProfessorEntity createProfessor(String professorUUID, String imgObjectKey, CreateProfessorRequest request) {
         ProfessorEntity professorEntity = new ProfessorEntity();
         professorEntity.setUuid(professorUUID);
         professorEntity.setName(request.getName());
@@ -23,6 +22,7 @@ public class ProfessorWriter {
         professorEntity.setDetailInfo(request.getDetailInfo());
         professorEntity.setEmail(request.getEmail());
         professorEntity.setMajor(request.getMajor());
+        professorEntity.setImgObjectKey(imgObjectKey);
 
         // Biography 변환 및 저장
         List<BiographyEntryEntity> biographyEntities = request.toBiographyList().stream().map(bio -> {

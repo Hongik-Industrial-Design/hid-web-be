@@ -1,9 +1,12 @@
 package com.hid_web.be.controller.professor;
 
 import com.hid_web.be.controller.professor.request.CreateProfessorRequest;
+import com.hid_web.be.controller.professor.response.ProfessorResponse;
 import com.hid_web.be.domain.professor.ProfessorService;
 import com.hid_web.be.storage.professor.ProfessorEntity;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,17 +26,24 @@ public class ProfessorController {
     private final ProfessorService professorService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> createProfessor(
+    public ResponseEntity<ProfessorResponse> createProfessor(
             @Valid @ModelAttribute CreateProfessorRequest createProfessorRequest
     ) {
         try {
             ProfessorEntity professorEntity = professorService.createProfessor(createProfessorRequest);
+            ProfessorResponse response = ProfessorResponse.of(professorEntity);
             URI location = URI.create("/professors/" + professorEntity.getUuid());
-            return ResponseEntity.created(location).body(professorEntity);
+            return ResponseEntity.created(location).body(response);
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("알 수 없는 오류가 발생했습니다: " + e.getMessage());
+                    .build();
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Result<T> {
+        private T data;
     }
 }

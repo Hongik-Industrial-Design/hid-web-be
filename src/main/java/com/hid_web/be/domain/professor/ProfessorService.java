@@ -19,12 +19,12 @@ public class ProfessorService {
     @Transactional
     public ProfessorEntity createProfessor(CreateProfessorRequest createProfessorRequest) throws IOException {
         // 교수 UUID 생성
-        UUID professorUUID = UUID.randomUUID();
+        String professorUUID = UUID.randomUUID().toString();
 
         // S3에 프로필 이미지 업로드
-        s3Writer.writeFile(createProfessorRequest.getImage(), professorUUID + "/profile-image");
+        String imgObjectKey = s3Writer.writeFile(createProfessorRequest.getImage(), professorUUID + "/profile-image");
 
         // 교수 기본 정보 저장
-        return professorWriter.createProfessor(professorUUID, createProfessorRequest);
+        return professorWriter.createProfessor(professorUUID, imgObjectKey, createProfessorRequest);
     }
 }
