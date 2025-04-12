@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/exhibits/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/exhibits/admin/{exhibitId}").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/exhibits/admin/{exhibitId}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/professors").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .sessionManagement(session -> session

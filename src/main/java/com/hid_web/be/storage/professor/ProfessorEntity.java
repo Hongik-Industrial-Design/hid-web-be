@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "professors")
@@ -16,7 +15,7 @@ import java.util.UUID;
 public class ProfessorEntity {
 
     @Id
-    private UUID uuid;
+    private String uuid;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -35,6 +34,8 @@ public class ProfessorEntity {
 
     @Column(columnDefinition = "TEXT")
     private String major;
+
+    private String imgObjectKey;
 
     // 관계 설정
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)

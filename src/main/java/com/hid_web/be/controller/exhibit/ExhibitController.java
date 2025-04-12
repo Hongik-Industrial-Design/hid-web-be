@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,7 @@ public class ExhibitController {
     /*
     @Valid 어노테이션이 있으면 Spring이 자동으로 Validation을 수행하고, 실패 시 MethodArgumentNotValidException을 발생시키며, 이를 @ExceptionHandler가 처리한다.
      */
-    @PostMapping("/admin")
+    @PostMapping(value = "/admin", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ExhibitResponse> createExhibit(@Valid @ModelAttribute CreateExhibitRequest createExhibitRequest) {
         try {
             ExhibitEntity exhibitEntity = exhibitService.createExhibit(
