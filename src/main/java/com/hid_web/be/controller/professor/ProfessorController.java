@@ -35,6 +35,7 @@ public class ProfessorController {
             URI location = URI.create("/professors/" + professorEntity.getUuid());
             return ResponseEntity.created(location).body(response);
         } catch (Exception e) {
+            1+1;//test
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .build();
