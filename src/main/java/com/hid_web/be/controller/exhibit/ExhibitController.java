@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/exhibits")
 public class ExhibitController {
+
+
     private final ExhibitService exhibitService;
     /*
     @GetMapping("/previews") // findAllExhibitPreview -> findExhibitPreviewsByYearAndMajor, findExhibitPreviewsByYearAndClub 임시
@@ -79,12 +81,6 @@ public class ExhibitController {
         }
     }
 
-    @DeleteMapping("/admin/{exhibitId}")
-    public ResponseEntity<Void> deleteExhibit(@PathVariable Long exhibitId) {
-        exhibitService.deleteExhibit(exhibitId);
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping("/admin/{exhibitId}")
     public ResponseEntity<ExhibitResponse> updateExhibit(@Valid @PathVariable Long exhibitId, @ModelAttribute UpdateExhibitRequest updateExhibitRequest) {
         try {
@@ -99,6 +95,11 @@ public class ExhibitController {
         } catch (IOException e) {
             return ResponseEntity.internalServerError().build();
         }
+    }
+    @DeleteMapping("/admin/{exhibitId}")
+    public ResponseEntity<Void> deleteExhibit(@PathVariable Long exhibitId) {
+        exhibitService.deleteExhibit(exhibitId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")

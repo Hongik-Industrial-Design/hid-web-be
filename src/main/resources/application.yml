@@ -1,20 +1,19 @@
 # 공통 설정
+
 spring:
+  config:
+    type: aws-parameterstore:/config/hid-prd/
+
+  profiles:
+    active: dev
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         default_batch_fetch_size: 100
-
-  cloud:
-    aws:
-      s3:
-        bucket: ${S3_BUCKET}
-      cloudfront-domain: ${CLOUDFRONT_DOMAIN}
 
   servlet:
     multipart:
@@ -24,14 +23,15 @@ spring:
 
 logging:
   level:
+    root: debug
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace
 
-# Secret Key 은닉 필요
-#application:
- #security:
-    #jwt:
-      #expiration:
+      # Secret Key 은닉 필요
+      #application:
+      #security:
+      #jwt:
+    #expiration:
 
 ---
 # Dev 환경 설정 - 환경변수 설정
@@ -41,9 +41,9 @@ spring:
       on-profile: dev
 
   datasource:
-    url: jdbc:mysql://${DB_URL}:${DB_PORT}/hid # 도커 실행 시 host.docker.internal
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3306/test # 도커 실행 시 host.docker.internal
+    username: root
+    password: 1234
 
   jpa:
     hibernate:
@@ -52,33 +52,9 @@ spring:
   cloud:
     aws:
       credentials:
-        access-key: ${AWS_ACCESS_KEY}
-        secret-key: ${AWS_SECRET_KEY}
+        access-key: AKIA356SJRQL66537PUS
+        secret-key: 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
       region:
-        static: ${AWS_REGION}
-      cloudfront-domain: ${CLOUDFRONT_DOMAIN}
-
+        static: ap-northeast-2
+      #cloudfront-domain: ${CLOUDFRONT_DOMAIN}
 ---
-# Prd 환경 설정 - AWS Parameter Store로 부터 환경변수 설정
-config:
-  type: aws-parameterstore:/config/hid-prd/
-
-spring:
-  config:
-    activate:
-      on-profile: prd
-    import: ${config.type}
-
-  datasource:
-    url: jdbc:mysql://${DB_URL}:${DB_PORT}/hid
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-
-  cloud:
-    aws:
-      credentials:
-        instance-profile: true

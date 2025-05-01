@@ -19,10 +19,12 @@ import java.util.*;
 public class S3Uploader {
     private final S3Client s3Client;
 
-    @Value("${spring.cloud.aws.s3.bucket}")
+    //@Value("${spring.cloud.aws.s3.bucket}")
+    @Value("test")
     private String bucketName;
 
-    @Value("${cloudfront.domain}")  // CloudFront 도메인 환경변수로 설정
+    //@Value("${spring.cloud.aws.s3.bucket}")  // CloudFront 도메인 환경변수로 설정
+    @Value("test")
     private String cloudFrontDomain;
 
     // 단일 파일 업로드 (빈 파일 검증 추가)

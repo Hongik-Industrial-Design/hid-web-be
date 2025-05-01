@@ -15,9 +15,11 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class S3Writer {
+
     private final S3Operations s3Operations;
 
-    @Value("${spring.cloud.aws.s3.bucket}")
+    //@Value("${spring.cloud.aws.s3.bucket}")
+    @Value("test")
     private String bucketName;
 
     public String writeFile(MultipartFile file, String folderPath) throws IOException {
