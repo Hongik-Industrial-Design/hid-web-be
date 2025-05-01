@@ -18,8 +18,7 @@ public class S3Writer {
 
     private final S3Operations s3Operations;
 
-    //@Value("${spring.cloud.aws.s3.bucket}")
-    @Value("test")
+    @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
     public String writeFile(MultipartFile file, String folderPath) throws IOException {
