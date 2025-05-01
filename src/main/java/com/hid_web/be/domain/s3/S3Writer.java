@@ -15,6 +15,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class S3Writer {
+
     private final S3Operations s3Operations;
 
     @Value("${spring.cloud.aws.s3.bucket}")
