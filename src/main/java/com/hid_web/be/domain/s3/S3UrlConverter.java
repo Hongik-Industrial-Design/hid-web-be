@@ -20,6 +20,6 @@ public class S3UrlConverter {
     }
 
     public static String convertCloudfrontUrlFromObjectKey(String objectKey) {
-        return "https://d3587x8mdcc9gd.cloudfront.net/" + objectKey;
+        return "https://di00vgoc2ngki.cloudfront.net/" + objectKey;
     }
 }
