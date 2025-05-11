@@ -21,7 +21,7 @@ public class CreateExhibitArtistRequest {
     private String nameEn;
 
     @NotBlank(message = "역할은 필수입니다")
-    @Size(max = 30, message = "역할은 30자를 초과할 수 없습니다")
+    @Size(max = 100, message = "역할은 100자를 초과할 수 없습니다")
     private String role;
 
     @Email(message = "올바른 이메일 형식이어야 합니다")
