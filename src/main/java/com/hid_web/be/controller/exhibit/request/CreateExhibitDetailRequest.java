@@ -38,7 +38,6 @@ public class CreateExhibitDetailRequest {
     @Size(max = 700, message = "영문 부제목은 700자를 초과할 수 없습니다")
     private String subTitleEn;
 
-    @NotBlank(message = "국문 본문은 필수입니다")
     @Size(max = 1000, message = "한글 본문은 1000자를 초과할 수 없습니다")
     private String descriptionKo;
 
