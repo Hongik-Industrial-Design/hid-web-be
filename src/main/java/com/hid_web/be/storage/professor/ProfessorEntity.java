@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.util.List;
 
@@ -14,6 +15,11 @@ import java.util.List;
 @AllArgsConstructor
 public class ProfessorEntity {
 
+    /*
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name= "uuid", strategy = "uuid2") //uuid4 자동 생성
+    @Column(columnDefinition = "BINARY(16)")
+     */
     @Id
     private String uuid;
 
@@ -36,6 +42,9 @@ public class ProfessorEntity {
     private String major;
 
     private String imgObjectKey;
+
+    @Column
+    private int sortOrder;  //정렬 방식
 
     // 관계 설정
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
